@@ -1,0 +1,24 @@
+{
+  "accounts": [
+    {
+      "id": 1,
+      "name": "Igor Da Silva",
+      "balance": 550
+    },
+    {
+      "id": 2,
+      "name": "Gabriel Lemos",
+      "balance": 600
+    },
+    {
+      "id": 3,
+      "name": "Gabriel Monteiro",
+      "balance": 370
+    },
+    {
+      "id": 6,
+      "name": "Lucas Mamaquinho Lindo Maravilhoso",
+      "balance": 250000
+    }
+  ]
+}
