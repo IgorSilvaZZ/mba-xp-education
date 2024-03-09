@@ -1,7 +1,7 @@
 export interface CreateSolicitationDTO {
-    cliente: string;
-    produto: string;
-    valor: number;
-    entregue: boolean;
-    timestamp?: Date;
+  cliente: string;
+  produto: string;
+  valor: number;
+  entregue?: boolean;
+  timestamp?: Date;
 }

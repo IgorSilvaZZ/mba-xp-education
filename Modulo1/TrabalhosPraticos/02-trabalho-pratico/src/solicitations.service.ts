@@ -1,202 +1,228 @@
-import { CreateSolicitationDTO } from './dtos/CreateSolicitation.dto';
-import { UpdateSolicitationDTO } from './dtos/UpdateSolicitation.dto';
+import { CreateSolicitationDTO } from "./shared/http/infra/dtos/CreateSolicitation.dto";
+import { UpdateSolicitationDTO } from "./shared/http/infra/dtos/UpdateSolicitation.dto";
 
-import { Solicitations, getSolicitationsFile, writeSolicitationsFile } from "./utils/solicitationsFile";
+import {
+  Solicitations,
+  getSolicitationsFile,
+  writeSolicitationsFile,
+} from "./utils/solicitationsFile";
 
 export class SolicitationsService {
-    async getIndexSolicitationById(id: number, solicitationsList: Solicitations) {
-        const findProductIndex = solicitationsList.pedidos.findIndex(item => item.id === id);
+  async getIndexSolicitationById(id: number, solicitationsList: Solicitations) {
+    const findProductIndex = solicitationsList.pedidos.findIndex(
+      (item) => item.id === id
+    );
 
-        if (findProductIndex === -1) {
-            return null;
-        }
-
-        return findProductIndex;
+    if (findProductIndex === -1) {
+      return null;
     }
 
-    async getSolicitationById(id: number) {
-        const solicitationsList = await getSolicitationsFile();
+    return findProductIndex;
+  }
 
-        const findProductIndex = await this.getIndexSolicitationById(id, solicitationsList);
+  async getSolicitationById(id: number) {
+    const solicitationsList = await getSolicitationsFile();
 
-        if (!findProductIndex) {
-            throw new Error("Product is not exists!");
-        }
+    const findProductIndex = await this.getIndexSolicitationById(
+      id,
+      solicitationsList
+    );
 
-        const solicitation = solicitationsList.pedidos.find(item => item.id === id);
-
-        return solicitation;
+    if (!findProductIndex) {
+      throw new Error("Product is not exists!");
     }
 
-    async getTotalDeliveredSolicitationsByClient(client: string) {
-        const solicitationsList = await getSolicitationsFile();
+    const solicitation = solicitationsList.pedidos.find(
+      (item) => item.id === id
+    );
 
-        const solicitationsClient = solicitationsList.pedidos.filter(item => item.cliente === client);
+    return solicitation;
+  }
 
-        if (solicitationsClient.length <= 0) {
-            throw new Error("Client does not exists!");
-        }
+  async getTotalDeliveredSolicitationsByClient(client: string) {
+    const solicitationsList = await getSolicitationsFile();
 
-        let totalDeliveredSolicitationsClient = 0;
-        
-        for (let solicitation of solicitationsClient) {
-            if (solicitation.entregue) {
-                totalDeliveredSolicitationsClient += solicitation.valor;
-            }
-        }
+    const solicitationsClient = solicitationsList.pedidos.filter(
+      (item) => item.cliente === client
+    );
 
-        return { totalDeliveredSolicitationsClient }; 
-
+    if (solicitationsClient.length <= 0) {
+      throw new Error("Client does not exists!");
     }
 
-    async getTotalDeliveredSolicitationsByProduct(product: string) {
-        const solicitationsList = await getSolicitationsFile();
+    let totalDeliveredSolicitationsClient = 0;
 
-        const solicitationsProduct = solicitationsList.pedidos.filter(item => item.produto === product);
-
-        let totalDeliveredSolicitationsProduct = 0;
-        
-        for (let solicitation of solicitationsProduct) {
-            if (solicitation.entregue) {
-                totalDeliveredSolicitationsProduct += solicitation.valor;
-            }
-        }
-
-        return { totalDeliveredSolicitationsProduct }
+    for (let solicitation of solicitationsClient) {
+      if (solicitation.entregue) {
+        totalDeliveredSolicitationsClient += solicitation.valor;
+      }
     }
 
-    async getMaxSolicitations() {
-        const solicitationsList = await getSolicitationsFile();
+    return { totalDeliveredSolicitationsClient };
+  }
 
-        type ProductList = {
-            name: string;
-            quantity: number;
-        }
+  async getTotalDeliveredSolicitationsByProduct(product: string) {
+    const solicitationsList = await getSolicitationsFile();
 
-        const products: ProductList[] = [];
+    const solicitationsProduct = solicitationsList.pedidos.filter(
+      (item) => item.produto === product
+    );
 
-        const productResult = [];
+    let totalDeliveredSolicitationsProduct = 0;
 
-        for (let solicitation of solicitationsList.pedidos) {
-            if (solicitation.entregue) {
-                let productFind = products.findIndex(item => item.name === solicitation.produto);
-
-                if (productFind === -1) {
-                    products.push({ name: solicitation.produto, quantity: 1 })
-                } else {
-                    products[productFind].quantity++;
-                }
-            } 
-        }
-
-        const descProductsList = products.sort((a, b) => b.quantity - a.quantity);
-
-        for (let product of descProductsList) {
-            productResult.push(`${product.name} - ${product.quantity}`);
-        }
-
-        return productResult;
-
+    for (let solicitation of solicitationsProduct) {
+      if (solicitation.entregue) {
+        totalDeliveredSolicitationsProduct += solicitation.valor;
+      }
     }
 
-    async createSolicitation(data: CreateSolicitationDTO) {
-        
-        const solicitationsList = await getSolicitationsFile();
+    return { totalDeliveredSolicitationsProduct };
+  }
 
-        const solicitationsData = {
-            id: solicitationsList.nextId++,
-            ...data,
-        };
+  async getMaxSolicitations() {
+    const solicitationsList = await getSolicitationsFile();
 
-        solicitationsList.pedidos.push(solicitationsData);
+    type ProductList = {
+      name: string;
+      quantity: number;
+    };
 
-        await writeSolicitationsFile(solicitationsList);
+    const products: ProductList[] = [];
 
-        return solicitationsData;
+    const productResult = [];
+
+    for (let solicitation of solicitationsList.pedidos) {
+      if (solicitation.entregue) {
+        let productFind = products.findIndex(
+          (item) => item.name === solicitation.produto
+        );
+
+        if (productFind === -1) {
+          products.push({ name: solicitation.produto, quantity: 1 });
+        } else {
+          products[productFind].quantity++;
+        }
+      }
     }
 
-    async updateSolicitation(id: number, { cliente, produto, valor, entregue }: UpdateSolicitationDTO) {
-        const solicitationsList = await getSolicitationsFile();
+    const descProductsList = products.sort((a, b) => b.quantity - a.quantity);
 
-        const findProductIndex = await this.getIndexSolicitationById(id, solicitationsList);
-
-        if (findProductIndex === -1) {
-            throw new Error("Product is not exists!");
-        }
-
-        if (!cliente) {
-            throw new Error("Invalid field 'cliente'!")
-        }
-
-        if (!produto) {
-            throw new Error("Invalid field 'produto'!")
-        }
-
-        if (valor <= 0 || valor === null) {
-            throw new Error("Invalid field 'valor'!")
-        }
-
-        if (typeof entregue !== 'boolean') {
-            throw new Error("Invalid field 'entregue'!")
-        }
-
-        const productIndex = Number(findProductIndex);
-
-        const solicitationUpdated = {
-            ...solicitationsList.pedidos[productIndex],
-            cliente, 
-            produto, 
-            valor, 
-            entregue
-        }
-
-        solicitationsList.pedidos[productIndex] = solicitationUpdated;
-
-        await writeSolicitationsFile(solicitationsList);
-
-        return solicitationUpdated;
-
+    for (let product of descProductsList) {
+      productResult.push(`${product.name} - ${product.quantity}`);
     }
 
-    async updateDeliveredById(id: number, delivered: boolean) {
-        const solicitationsList = await getSolicitationsFile();
+    return productResult;
+  }
 
-        const findProductIndex = await this.getIndexSolicitationById(id, solicitationsList);
+  async createSolicitation(data: CreateSolicitationDTO) {
+    const solicitationsList = await getSolicitationsFile();
 
-        if (!findProductIndex) {
-            throw new Error("Product is not exists!");
-        }
+    const solicitationsData = {
+      id: solicitationsList.nextId++,
+      ...data,
+    };
 
-        const productIndex = Number(findProductIndex);
+    solicitationsList.pedidos.push(solicitationsData);
 
-        if (typeof delivered !== 'boolean') {
-            throw new Error("Invalid field 'entregue'!")
-        }
-        
-        const solicitationUpdated = {
-            ...solicitationsList.pedidos[productIndex],
-            entregue: delivered
-        };
+    await writeSolicitationsFile(solicitationsList);
 
-        solicitationsList.pedidos[productIndex] = solicitationUpdated;
+    return solicitationsData;
+  }
 
-        await writeSolicitationsFile(solicitationsList);
+  async updateSolicitation(
+    id: number,
+    { cliente, produto, valor, entregue }: UpdateSolicitationDTO
+  ) {
+    const solicitationsList = await getSolicitationsFile();
 
-        return solicitationUpdated;
+    const findProductIndex = await this.getIndexSolicitationById(
+      id,
+      solicitationsList
+    );
+
+    if (findProductIndex === -1) {
+      throw new Error("Product is not exists!");
     }
 
-    async deleteSolicitationById(id: number) {
-        const solicitationsList = await getSolicitationsFile();
-
-        const findProductIndex = await this.getIndexSolicitationById(id, solicitationsList);
-
-        if (!findProductIndex) {
-            throw new Error("Product is not exists!");
-        };
-
-        solicitationsList.pedidos = solicitationsList.pedidos.filter(item => item.id !== id);
-
-        await writeSolicitationsFile(solicitationsList);
+    if (!cliente) {
+      throw new Error("Invalid field 'cliente'!");
     }
 
+    if (!produto) {
+      throw new Error("Invalid field 'produto'!");
+    }
+
+    if (valor <= 0 || valor === null) {
+      throw new Error("Invalid field 'valor'!");
+    }
+
+    if (typeof entregue !== "boolean") {
+      throw new Error("Invalid field 'entregue'!");
+    }
+
+    const productIndex = Number(findProductIndex);
+
+    const solicitationUpdated = {
+      ...solicitationsList.pedidos[productIndex],
+      cliente,
+      produto,
+      valor,
+      entregue,
+    };
+
+    solicitationsList.pedidos[productIndex] = solicitationUpdated;
+
+    await writeSolicitationsFile(solicitationsList);
+
+    return solicitationUpdated;
+  }
+
+  async updateDeliveredById(id: number, delivered: boolean) {
+    const solicitationsList = await getSolicitationsFile();
+
+    const findProductIndex = await this.getIndexSolicitationById(
+      id,
+      solicitationsList
+    );
+
+    if (!findProductIndex) {
+      throw new Error("Product is not exists!");
+    }
+
+    const productIndex = Number(findProductIndex);
+
+    if (typeof delivered !== "boolean") {
+      throw new Error("Invalid field 'entregue'!");
+    }
+
+    const solicitationUpdated = {
+      ...solicitationsList.pedidos[productIndex],
+      entregue: delivered,
+    };
+
+    solicitationsList.pedidos[productIndex] = solicitationUpdated;
+
+    await writeSolicitationsFile(solicitationsList);
+
+    return solicitationUpdated;
+  }
+
+  async deleteSolicitationById(id: number) {
+    const solicitationsList = await getSolicitationsFile();
+
+    const findProductIndex = await this.getIndexSolicitationById(
+      id,
+      solicitationsList
+    );
+
+    if (!findProductIndex) {
+      throw new Error("Product is not exists!");
+    }
+
+    solicitationsList.pedidos = solicitationsList.pedidos.filter(
+      (item) => item.id !== id
+    );
+
+    await writeSolicitationsFile(solicitationsList);
+  }
 }

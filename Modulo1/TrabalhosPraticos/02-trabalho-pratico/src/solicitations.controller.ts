@@ -1,155 +1,153 @@
 import { Request, Response } from "express";
 
-import { CreateSolicitationDTO } from "./dtos/CreateSolicitation.dto";
+import { CreateSolicitationDTO } from "./shared/http/infra/dtos/CreateSolicitation.dto";
 
 import { SolicitationsService } from "./solicitations.service";
-import { UpdateSolicitationDTO } from "./dtos/UpdateSolicitation.dto";
+import { UpdateSolicitationDTO } from "./shared/http/infra/dtos/UpdateSolicitation.dto";
 
 export class SolicitationsController {
-    async getById(req: Request, res: Response) {
-        const { id } = req.params;
+  async getById(req: Request, res: Response) {
+    const { id } = req.params;
 
-        try {
-            
-            const solicitationsService = new SolicitationsService();
+    try {
+      const solicitationsService = new SolicitationsService();
 
-            const solicitation = await solicitationsService.getSolicitationById(Number(id));
+      const solicitation = await solicitationsService.getSolicitationById(
+        Number(id)
+      );
 
-            return res.json(solicitation);
-
-        } catch (error: any) {
-            return res.status(400).json({ message: error.message });
-        }
-
+      return res.json(solicitation);
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
     }
+  }
 
-    async getTotalDeliveredByClient(req: Request, res: Response) {
-        const { client } = req.query;
-        
-        try {
+  async getTotalDeliveredByClient(req: Request, res: Response) {
+    const { client } = req.query;
 
-            const solicitationsService = new SolicitationsService();
+    try {
+      const solicitationsService = new SolicitationsService();
 
-            const totalDeliveredClient = await solicitationsService.getTotalDeliveredSolicitationsByClient(String(client));
+      const totalDeliveredClient =
+        await solicitationsService.getTotalDeliveredSolicitationsByClient(
+          String(client)
+        );
 
-            return res.json(totalDeliveredClient);
-            
-        } catch (error: any) {
-            return res.status(400).json({ message: error.message });
-        }
-
+      return res.json(totalDeliveredClient);
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
     }
+  }
 
-    async getTotalDeliveredProduct(req: Request, res: Response) {
-        const { product } = req.query;
+  async getTotalDeliveredProduct(req: Request, res: Response) {
+    const { product } = req.query;
 
-        try {
-            
-            const solicitationsService = new SolicitationsService();
+    try {
+      const solicitationsService = new SolicitationsService();
 
-            const totalDeliveredProduct = await solicitationsService.getTotalDeliveredSolicitationsByProduct(String(product));
+      const totalDeliveredProduct =
+        await solicitationsService.getTotalDeliveredSolicitationsByProduct(
+          String(product)
+        );
 
-            return res.json(totalDeliveredProduct);
-            
-        } catch (error: any) {
-            return res.status(400).json({ message: error.message });
-        }
-
+      return res.json(totalDeliveredProduct);
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
     }
+  }
 
-    async getMaxSolicitations(req: Request, res: Response) {
-        try {
+  async getMaxSolicitations(req: Request, res: Response) {
+    try {
+      const solicitationsService = new SolicitationsService();
 
-            const solicitationsService = new SolicitationsService();
+      const maxSolicitations = await solicitationsService.getMaxSolicitations();
 
-            const maxSolicitations = await solicitationsService.getMaxSolicitations();
-
-            return res.json(maxSolicitations);
-            
-        } catch (error: any) {
-            return res.status(400).json({ message: error.message });
-        }
+      return res.json(maxSolicitations);
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
     }
+  }
 
-    async create(req: Request, res: Response) {
-        const { cliente, produto, valor } = req.body;
+  async create(req: Request, res: Response) {
+    const { cliente, produto, valor } = req.body;
 
-        const solicitationsService = new SolicitationsService();
+    const solicitationsService = new SolicitationsService();
 
-        const dataSolicitation: CreateSolicitationDTO = {
-            cliente,
-            produto,
-            valor,
-            entregue: false,
-            timestamp: new Date()
-        }
+    const dataSolicitation: CreateSolicitationDTO = {
+      cliente,
+      produto,
+      valor,
+      entregue: false,
+      timestamp: new Date(),
+    };
 
-        try {
-            const solicitation = await solicitationsService.createSolicitation(dataSolicitation);
+    try {
+      const solicitation = await solicitationsService.createSolicitation(
+        dataSolicitation
+      );
 
-            return res.status(201).json(solicitation);
-        } catch (error: any) {
-            return res.status(400).json({ message: error.message });
-        }
-
+      return res.status(201).json(solicitation);
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
     }
+  }
 
-    async update(req: Request, res: Response) {
-        const { id } = req.params;
+  async update(req: Request, res: Response) {
+    const { id } = req.params;
 
-        const { cliente, valor, produto, entregue } = req.body;
-        
-        try {
-            const solicitationsService = new SolicitationsService();
+    const { cliente, valor, produto, entregue } = req.body;
 
-            const updateSolicitation: UpdateSolicitationDTO = {
-                cliente, 
-                valor, 
-                produto, 
-                entregue
-            }
+    try {
+      const solicitationsService = new SolicitationsService();
 
-            const updatedSolicitation = await solicitationsService.updateSolicitation(Number(id), updateSolicitation);
-            
-            return res.json(updatedSolicitation);
+      const updateSolicitation: UpdateSolicitationDTO = {
+        cliente,
+        valor,
+        produto,
+        entregue,
+      };
 
-        } catch (error: any) {
-            return res.status(400).json({ message: error.message });
-        }
+      const updatedSolicitation = await solicitationsService.updateSolicitation(
+        Number(id),
+        updateSolicitation
+      );
+
+      return res.json(updatedSolicitation);
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
     }
+  }
 
-    async updateDelivered(req: Request, res: Response) {
-        const { id } = req.params;
+  async updateDelivered(req: Request, res: Response) {
+    const { id } = req.params;
 
-        const { entregue } = req.body;
+    const { entregue } = req.body;
 
-        try {
-            
-            const solicitationsService = new SolicitationsService();
-            
-            const deliveredUpdated = await solicitationsService.updateDeliveredById(Number(id), entregue);
+    try {
+      const solicitationsService = new SolicitationsService();
 
-            return res.json(deliveredUpdated);
-        } catch (error: any) {
-            return res.status(400).json({ message: error.message });
-        }
+      const deliveredUpdated = await solicitationsService.updateDeliveredById(
+        Number(id),
+        entregue
+      );
 
+      return res.json(deliveredUpdated);
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
     }
+  }
 
-    async delete(req: Request, res: Response) {
-        const { id } = req.params;
+  async delete(req: Request, res: Response) {
+    const { id } = req.params;
 
-        try {
+    try {
+      const solicitationsService = new SolicitationsService();
 
-            const solicitationsService = new SolicitationsService();
-            
-            await solicitationsService.deleteSolicitationById(Number(id));
+      await solicitationsService.deleteSolicitationById(Number(id));
 
-            return res.end();
-
-        } catch (error: any) {
-            return res.status(400).json({ message: error.message });
-        }
-
+      return res.end();
+    } catch (error: any) {
+      return res.status(400).json({ message: error.message });
     }
+  }
 }
