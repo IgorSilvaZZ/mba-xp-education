@@ -1,10 +1,14 @@
 import { Router } from "express";
-import CreateUserFactoryFactory from "../../../../solicitations/factories/CreateUserFactory.factory";
+import { solicitationController } from "../../../../solicitations/factories/Solicitation.factory";
 
 const solicitationsRouter = Router();
 
-const createSolicitationController = CreateUserFactoryFactory();
+solicitationsRouter.post("/", async (req, res) => {
+  return await solicitationController.post(req, res);
+});
 
-solicitationsRouter.post("/", createSolicitationController.create);
+solicitationsRouter.get("/", async (req, res) => {
+  return await solicitationController.get(req, res);
+});
 
 export { solicitationsRouter };

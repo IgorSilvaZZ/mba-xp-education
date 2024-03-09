@@ -7,16 +7,7 @@ import { CreateSolicitationDTO } from "../../../dtos/CreateSolicitationDTO";
 import { Solicitations } from "../../../domains/entities/Solicitations";
 
 export class SolicitationFsRepository implements SolicitationRepository {
-  fileName = join(
-    __dirname,
-    "..",
-    "..",
-    "..",
-    "..",
-    "..",
-    "files",
-    "pedidos.json"
-  );
+  fileName = join(__dirname, "..", "..", "..", "..", "files", "pedidos.json");
 
   async getAll(): Promise<Solicitations> {
     const solicitations = JSON.parse(
@@ -38,7 +29,7 @@ export class SolicitationFsRepository implements SolicitationRepository {
 
     solicitationsList.pedidos.push(solicitationsData);
 
-    await writeFile(this.fileName, JSON.stringify(data, null, 2));
+    await writeFile(this.fileName, JSON.stringify(solicitationsList, null, 2));
 
     return solicitationsData;
   }
