@@ -1,1 +1,3 @@
-export class ClientRepository {}
+export class ClientRepository {
+  async create(dataClient) {}
+}
