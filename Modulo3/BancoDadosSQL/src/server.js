@@ -2,10 +2,10 @@ import express from "express";
 import cors from "cors";
 import winston, { format } from "winston";
 
-import { clientRouter } from "./routes/client.route";
-import { productRouter } from "./routes/product.route";
-import { supplierRouter } from "./routes/supplier.route";
-import { saleRouter } from "./routes/sale.route";
+import { clientRouter } from "./routes/client.route.js";
+import { productRouter } from "./routes/product.route.js";
+import { supplierRouter } from "./routes/supplier.route.js";
+import { saleRouter } from "./routes/sale.route.js";
 
 const myFormat = format.printf(({ level, message, label, timestamp }) => {
   return `${timestamp} [${label}] ${level}: ${message}`;
@@ -38,5 +38,11 @@ app.use("/client", clientRouter);
 app.use("/product", productRouter);
 app.use("/supplier", supplierRouter);
 app.use("/sale", saleRouter);
+
+app.use((error, req, res, next) => {
+  logger.error(`${req.method} ${req.baseUrl} - ${error.message}`);
+
+  res.status(400).json({ error: error.message });
+});
 
 app.listen(3333, () => console.log("Api Started"));
