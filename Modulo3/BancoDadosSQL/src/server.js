@@ -35,8 +35,8 @@ app.use(
 );
 
 app.use("/client", clientRouter);
-app.use("/product", productRouter);
 app.use("/supplier", supplierRouter);
+app.use("/product", productRouter);
 app.use("/sale", saleRouter);
 
 app.use((error, req, res, next) => {
