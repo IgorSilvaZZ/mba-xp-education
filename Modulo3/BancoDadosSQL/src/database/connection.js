@@ -7,7 +7,7 @@ export function connect() {
 
   const pool = new pg.Pool({
     connectionString:
-      "postgresql://localhost/store?user=postgres&password=docker",
+      "postgresql://localhost/store?user=docker&password=docker",
   });
 
   global.connection = pool;
