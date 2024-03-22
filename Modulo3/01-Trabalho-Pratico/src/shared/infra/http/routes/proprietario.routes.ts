@@ -20,4 +20,8 @@ proprietarioRouter.put("/:proprietarioId", (req, res) => {
   return proprietarioController.update(req, res);
 });
 
+proprietarioRouter.delete("/:proprietarioId", (req, res) => {
+  return proprietarioController.delete(req, res);
+});
+
 export { proprietarioRouter };

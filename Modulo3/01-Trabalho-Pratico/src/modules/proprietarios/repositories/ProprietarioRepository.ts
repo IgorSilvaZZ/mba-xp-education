@@ -11,4 +11,5 @@ export abstract class ProprietarioRepository {
     proprietarioId: number,
     data: UpdateProprietarioDTO
   ): Promise<Proprietario>;
+  abstract delete(proprietarioId: number): Promise<void>;
 }

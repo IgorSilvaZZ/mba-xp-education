@@ -39,4 +39,11 @@ export class PrismaProprietarioRepository implements ProprietarioRepository {
 
     return proprietarioUpdated;
   }
+
+  async delete(proprietarioId: number): Promise<void> {
+      await prisma.proprietario.delete({
+        where: { proprietarioId }
+      }) 
+  }
+
 }

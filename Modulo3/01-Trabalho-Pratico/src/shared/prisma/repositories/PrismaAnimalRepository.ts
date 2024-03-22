@@ -13,6 +13,22 @@ export class PrismaAnimalRepository implements AnimalRepository {
     return animais;
   }
 
+  async findById(animalId: number): Promise<Animal | null> {
+    const animal = await prisma.animais.findFirst({
+      where: { animalId }
+    });
+
+    return animal;
+  }
+
+  async findByProprietarioId(fkProprietario: number): Promise<Animal[]> {
+    const animais = await prisma.animais.findMany({
+      where: { fkProprietario }
+    });
+
+    return animais;
+  }
+
   async create(data: CreateAnimalDTO): Promise<Animal> {
     const animal = await prisma.animais.create({
       data,
@@ -29,4 +45,13 @@ export class PrismaAnimalRepository implements AnimalRepository {
 
     return animalUpdated;
   }
+
+  async delete(animalId: number): Promise<void> {
+    await prisma.animais.delete({
+      where: {
+        animalId
+      }
+    });
+  }
+
 }
