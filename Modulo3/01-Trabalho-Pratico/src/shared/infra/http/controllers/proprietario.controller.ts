@@ -92,12 +92,12 @@ export class ProprietarioController {
 
       await this.deleteProprietarioUseCase.execute(Number(proprietarioId));
 
-      return res.status(204)
+      return res.status(204).send()
       
-    } catch (error) {
+    } catch (error: any) {
       return res
         .status(400)
-        .json({ message: "Erro ao criar novo proprietario", error });
+        .json({ message: "Erro ao criar novo proprietario", error: error.message });
     }
 
   }

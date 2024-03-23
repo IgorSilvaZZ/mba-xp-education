@@ -10,7 +10,7 @@ export class DeleteProprietarioUseCase {
     async execute(proprietarioId: number) {
         const animalsExists = await this.animalRepository.findByProprietarioId(proprietarioId);
 
-        if (!animalsExists) {
+        if (animalsExists.length > 0) {
             throw new Error("O Proprietario contém animais cadastrados!")
         }
 

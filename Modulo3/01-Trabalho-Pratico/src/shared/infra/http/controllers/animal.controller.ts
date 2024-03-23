@@ -113,7 +113,7 @@ export class AnimalController {
 
       await this.deleteAnimalUseCase.execute(Number(animalId));
 
-      return res.status(204);
+      return res.status(204).send();
       
     } catch (error) {
       return res

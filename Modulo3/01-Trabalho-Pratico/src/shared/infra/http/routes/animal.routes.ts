@@ -8,12 +8,12 @@ animalRouter.get("/", (req, res) => {
   return animalController.get(req, res);
 });
 
-animalRouter.get("/:proprietarioId", (req, res) => {
-  return animalController.getByProprietarioId(req, res);
-});
-
 animalRouter.get("/:animalId", (req, res) => {
   return animalController.getById(req, res);
+});
+
+animalRouter.get("/proprietario/:proprietarioId", (req, res) => {
+  return animalController.getByProprietarioId(req, res);
 });
 
 animalRouter.post("/", (req, res) => {
