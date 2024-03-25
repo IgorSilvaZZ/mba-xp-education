@@ -1,4 +1,5 @@
 import pg from "pg";
+import { Sequelize } from "sequelize";
 
 export function connect() {
   if (global.connection) {
@@ -14,3 +15,13 @@ export function connect() {
 
   return pool.connect();
 }
+
+export const sequelizeConnect = new Sequelize(
+  "postgresql://postgres:docker@localhost:5432/petshop?schema=public",
+  {
+    dialect: "postgres",
+    define: {
+      timestamps: false,
+    },
+  }
+);
