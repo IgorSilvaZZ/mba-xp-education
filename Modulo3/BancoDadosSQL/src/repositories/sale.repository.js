@@ -34,6 +34,23 @@ export class SaleRepository {
     }
   }
 
+  async getSalesByProductId(productId) {
+    const connection = await connect();
+
+    try {
+      const { rows } = await connection.query(
+        "SELECT * FROM Sales WHERE productId = $1",
+        [productId]
+      );
+
+      return rows;
+    } catch (error) {
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+
   async create({ value, date, clientId, productId }) {
     const connection = await connect();
 
@@ -55,14 +72,14 @@ export class SaleRepository {
     }
   }
 
-  async updateSaleById(id, { value, date, clientId, productId }) {
+  async updateSaleById(id, { value, date, clientId }) {
     const connection = await connect();
 
     try {
       const sql =
-        "UPDATE Sales SET value = $1, date = $2, clientId = $3, productId = $4 WHERE saleId = $6 RETURNING *";
+        "UPDATE Sales SET value = $1, date = $2, clientId = $3 WHERE saleId = $6 RETURNING *";
 
-      const values = [value, date, clientId, productId, id];
+      const values = [value, date, clientId, id];
 
       const { rows } = await connection.query(sql, values);
 

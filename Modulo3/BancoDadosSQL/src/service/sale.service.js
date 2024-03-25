@@ -9,8 +9,14 @@ export class SaleService {
     this._productRepository = new ProductRepository();
   }
 
-  async getSales() {
-    const sales = await this._saleRepository.getSales();
+  async getSales(productId) {
+    let sales = [];
+
+    if (productId) {
+      sales = await this._saleRepository.getSalesByProductId(productId);
+    } else {
+      sales = await this._saleRepository.getSales();
+    }
 
     return sales;
   }
@@ -77,7 +83,7 @@ export class SaleService {
     );
 
     if (!productExists) {
-      error += "Product not exits!";
+      error += "Product not exists!";
     }
 
     if (error) {
@@ -90,6 +96,26 @@ export class SaleService {
   }
 
   async deleteSaleById(id) {
+    const sale = await this._saleRepository.getSaleById(id);
+
+    if (!sale) {
+      throw new Error("Sale not exists!");
+    }
+
+    const product = await this._productRepository.getProductById(
+      sale.productId
+    );
+
+    const productUpdated = {
+      ...productExists,
+      stock: productExists.stock + 1,
+    };
+
+    this._productRepository.updateProductById(
+      product.productId,
+      productUpdated
+    );
+
     await this._saleRepository.deleteSaleById(id);
   }
 }

@@ -6,8 +6,10 @@ export class SaleController {
   }
 
   async get(req, res, next) {
+    const { productId } = req.query;
+
     try {
-      const clients = await this.saleService.getSales();
+      const clients = await this.saleService.getSales(productId);
 
       return res.json(clients);
     } catch (error) {
@@ -52,22 +54,21 @@ export class SaleController {
 
   async update(req, res, next) {
     const { id } = req.params;
-    const { value, date, clientId, productId } = req.body;
+    const { value, date, clientId } = req.body;
 
     try {
       if (!id) {
         throw new Error("Id is required!");
       }
 
-      if (!value || !date || !clientId || !productId) {
-        throw new Error("Value, Date, ClientId and ProductId is required!");
+      if (!value || !date || !clientId) {
+        throw new Error("Value, Date, and ClientId is required!");
       }
 
       const dataSale = {
         value,
         date,
         clientId,
-        productId,
       };
 
       const saleUpdated = await this.saleService.updateSaleById(id, dataSale);
