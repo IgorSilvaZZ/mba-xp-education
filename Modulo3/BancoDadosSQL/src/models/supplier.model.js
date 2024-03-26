@@ -3,9 +3,9 @@ import { INTEGER, STRING } from "sequelize";
 import { sequelizeConnect } from "../database/connection.js";
 
 const Supplier = new sequelizeConnect.define(
-  "Suppliers",
+  "suppliers",
   {
-    supplierId: {
+    supplierid: {
       type: INTEGER,
       primaryKey: true,
       autoIncrement: true,

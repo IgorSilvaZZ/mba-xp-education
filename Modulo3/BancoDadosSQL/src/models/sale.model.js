@@ -6,9 +6,9 @@ import { Client } from "./client.model.js";
 import { Product } from "./product.model.js";
 
 const Sale = sequelizeConnect.define(
-  "Sales",
+  "sales",
   {
-    saleId: {
+    saleid: {
       type: INTEGER,
       primaryKey: true,
       autoIncrement: true,

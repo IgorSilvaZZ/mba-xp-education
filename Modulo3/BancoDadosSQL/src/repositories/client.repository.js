@@ -1,10 +1,19 @@
-import { connect } from "../database/connection.js";
+/* import { connect } from "../database/connection.js"; */
+import { Client } from "../models/client.model.js";
 
 export class ClientRepository {
   async getClients() {
-    const connection = await connect();
+    /* const connection = await connect(); */
 
     try {
+      const clients = await Client.findAll();
+
+      return clients;
+    } catch (error) {
+      throw error;
+    }
+
+    /* try {
       const { rows } = await connection.query("SELECT * FROM Clients");
 
       return rows;
@@ -12,11 +21,19 @@ export class ClientRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 
   async getClientById(id) {
-    const connection = await connect();
+    try {
+      const client = await Client.findByPk(id);
+
+      return client;
+    } catch (error) {
+      throw error;
+    }
+
+    /* const connection = await connect();
 
     try {
       const { rows } = await connection.query(
@@ -31,13 +48,25 @@ export class ClientRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 
   async create({ name, cpf, phone, email, address }) {
-    const connection = await connect();
-
     try {
+      const client = Client.create({
+        name,
+        cpf,
+        phone,
+        email,
+        address,
+      });
+
+      return client;
+    } catch (error) {
+      throw error;
+    }
+
+    /* try {
       const sql =
         "INSERT INTO Clients (name, cpf, phone, email, address) VALUES ($1, $2, $3, $4, $5) RETURNING *";
 
@@ -52,11 +81,27 @@ export class ClientRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 
   async updateClientById(id, { name, cpf, phone, email, address }) {
-    const connection = await connect();
+    try {
+      const [, clientUpdate] = await Client.update(
+        { name, cpf, phone, email, address },
+        {
+          where: {
+            clientid: id,
+          },
+          returning: true,
+        }
+      );
+
+      return clientUpdate[0];
+    } catch (error) {
+      throw error;
+    }
+
+    /* const connection = await connect();
 
     try {
       const sql =
@@ -73,11 +118,21 @@ export class ClientRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 
   async deleteClientById(id) {
-    const connection = await connect();
+    try {
+      await Client.destroy({
+        where: {
+          clientid: id,
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
+
+    /* const connection = await connect();
 
     try {
       await connection.query("DELETE FROM Clients WHERE clientId = $1", [id]);
@@ -85,6 +140,6 @@ export class ClientRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 }

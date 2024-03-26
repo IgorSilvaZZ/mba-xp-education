@@ -5,9 +5,9 @@ import { sequelizeConnect } from "../database/connection.js";
 import { Supplier } from "./supplier.model.js";
 
 const Product = new sequelizeConnect.define(
-  "Products",
+  "products",
   {
-    productId: {
+    productid: {
       type: INTEGER,
       primaryKey: true,
       autoIncrement: true,

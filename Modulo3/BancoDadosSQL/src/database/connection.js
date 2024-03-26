@@ -16,12 +16,10 @@ export function connect() {
   return pool.connect();
 }
 
-export const sequelizeConnect = new Sequelize(
-  "postgresql://postgres:docker@localhost:5432/petshop?schema=public",
-  {
-    dialect: "postgres",
-    define: {
-      timestamps: false,
-    },
-  }
-);
+export const sequelizeConnect = new Sequelize("store", "postgres", "docker", {
+  host: "localhost",
+  dialect: "postgres",
+  define: {
+    timestamps: false,
+  },
+});
