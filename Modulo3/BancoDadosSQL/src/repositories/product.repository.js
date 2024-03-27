@@ -27,7 +27,7 @@ export class ProductRepository {
 
   async getProductById(id) {
     try {
-      const product = await Product.findByPk(id);
+      const product = await Product.findByPk(id, { raw: true });
 
       return product;
     } catch (error) {

@@ -19,7 +19,7 @@ export class ProductController {
     const { id } = req.params;
 
     try {
-      const product = await this._productService.getProductById(id);
+      const product = await this._productService.getProductById(Number(id));
 
       return res.json(product);
     } catch (error) {
@@ -94,6 +94,109 @@ export class ProductController {
       await this._productService.deleteProduct(id);
 
       return res.end();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getProductsInfo(req, res, next) {
+    try {
+      const productsInfos = await this._productService.getProductsInfo();
+
+      return res.json(productsInfos);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async createProductInfo(req, res, next) {
+    const { productId, category, width, height, depth, reviews } = req.body;
+
+    try {
+      if (!productId) {
+        throw new Error("Field productId is required!");
+      }
+
+      const productInfo = await this._productService.createProductInfo({
+        productId,
+        category,
+        width,
+        height,
+        depth,
+        reviews,
+      });
+
+      return res.status(201).json(productInfo);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updateProductInfo(req, res, next) {
+    const { productId } = req.params;
+    const { category, width, height, depth, reviews } = req.body;
+
+    try {
+      if (!productId) {
+        throw new Error("Field productId is required!");
+      }
+
+      await this._productService.updateProductInfo(Number(productId), {
+        category,
+        width,
+        height,
+        depth,
+        reviews,
+      });
+
+      return res.send();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteProductInfo(req, res, next) {
+    const { productId } = req.params;
+
+    try {
+      await this._productService.deleteProductInfo(Number(productId));
+
+      return res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async createReviewProductInfo(req, res, next) {
+    const { productId } = req.params;
+    const { review } = req.body;
+
+    try {
+      if (!productId || !review) {
+        throw new Error("Field(s) productId and review is required!");
+      }
+
+      const newReview = await this._productService.createReviewProductInfo(
+        Number(productId),
+        review
+      );
+
+      return res.status(201).json(newReview);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteReviewProductInfo(req, res, next) {
+    const { productId, indexReview } = req.params;
+
+    try {
+      await this._productService.deleteReviewProductInfo(
+        Number(productId),
+        Number(indexReview)
+      );
+
+      return res.status(204).send();
     } catch (error) {
       next(error);
     }
