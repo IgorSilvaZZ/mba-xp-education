@@ -87,6 +87,25 @@ export class SaleRepository {
     } */
   }
 
+  async getSalesBySupplierId(supplierid) {
+    try {
+      const sales = await Sale.findAll({
+        include: [
+          {
+            model: Product,
+            where: {
+              supplierid,
+            },
+          },
+        ],
+      });
+
+      return sales;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async create({ value, data, clientid, productid }) {
     try {
       const sale = await Sale.create({

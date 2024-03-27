@@ -6,10 +6,13 @@ export class SaleController {
   }
 
   async get(req, res, next) {
-    const { productId } = req.query;
+    const { productId, supplierId } = req.query;
 
     try {
-      const clients = await this.saleService.getSales(productId);
+      const clients = await this.saleService.getSales({
+        productid: productId,
+        supplierid: supplierId,
+      });
 
       return res.json(clients);
     } catch (error) {

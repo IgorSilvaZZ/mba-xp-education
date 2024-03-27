@@ -9,16 +9,16 @@ export class SaleService {
     this._productRepository = new ProductRepository();
   }
 
-  async getSales(productId) {
-    let sales = [];
-
-    if (productId) {
-      sales = await this._saleRepository.getSalesByProductId(productId);
-    } else {
-      sales = await this._saleRepository.getSales();
+  async getSales({ productid, supplierid }) {
+    if (productid) {
+      return await this._saleRepository.getSalesByProductId(productid);
     }
 
-    return sales;
+    if (supplierid) {
+      return await this._saleRepository.getSalesBySupplierId(supplierid);
+    }
+
+    return await this._saleRepository.getSales();
   }
 
   async getSaleById(id) {
