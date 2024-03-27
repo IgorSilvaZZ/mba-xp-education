@@ -42,7 +42,7 @@ export class ProductController {
         description,
         value,
         stock,
-        supplierId,
+        supplierid: supplierId,
       };
 
       const product = await this._productService.create(dataProduct);
@@ -73,7 +73,7 @@ export class ProductController {
         description,
         value,
         stock,
-        supplierId,
+        supplierid: supplierId,
       };
 
       const productUpdated = await this._productService.updateProduct(

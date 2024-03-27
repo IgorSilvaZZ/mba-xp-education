@@ -23,7 +23,7 @@ export class ProductService {
 
   async create(dataProduct) {
     const supplierExists = await this._supplierRepository.getSupplierById(
-      dataProduct.supplierId
+      dataProduct.supplierid
     );
 
     if (!supplierExists) {
@@ -37,7 +37,7 @@ export class ProductService {
 
   async updateProduct(id, dataProduct) {
     const supplierExists = await this._supplierRepository.getSupplierById(
-      dataProduct.supplierId
+      dataProduct.supplierid
     );
 
     if (!supplierExists) {
@@ -57,8 +57,10 @@ export class ProductService {
       id
     );
 
-    if (!productSaleExists) {
-      throw new Error("Product error in delete!");
+    if (productSaleExists.length > 0) {
+      throw new Error(
+        "It is not possible to delete the product, it contains sales!"
+      );
     }
 
     await this._productRepository.deleteProductById(id);

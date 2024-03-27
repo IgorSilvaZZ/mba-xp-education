@@ -2,7 +2,7 @@ import { INTEGER, STRING } from "sequelize";
 
 import { sequelizeConnect } from "../database/connection.js";
 
-const Supplier = new sequelizeConnect.define(
+const Supplier = sequelizeConnect.define(
   "suppliers",
   {
     supplierid: {

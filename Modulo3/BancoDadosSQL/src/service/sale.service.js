@@ -27,8 +27,8 @@ export class SaleService {
     return client;
   }
 
-  async create({ value, date, clientId, productId }) {
-    const clientExists = await this._clientRepository.getClientById(clientId);
+  async create({ value, data, clientid, productid }) {
+    const clientExists = await this._clientRepository.getClientById(clientid);
 
     let error = "";
 
@@ -37,7 +37,7 @@ export class SaleService {
     }
 
     const productExists = await this._productRepository.getProductById(
-      productId
+      productid
     );
 
     if (!productExists) {
@@ -48,7 +48,7 @@ export class SaleService {
       throw new Error(error);
     }
 
-    if (productExists.stock > 0) {
+    if (productExists.stock < 0) {
       throw new Error("Product unavailable for sale!");
     }
 
@@ -57,40 +57,30 @@ export class SaleService {
       stock: productExists.stock - 1,
     };
 
-    this._productRepository.updateProductById(productId, productUpdated);
+    this._productRepository.updateProductById(productid, productUpdated);
 
     const sale = await this._saleRepository.create({
       value,
-      date,
-      clientId,
-      productId,
+      data,
+      clientid,
+      productid,
     });
 
     return sale;
   }
 
-  async updateSaleById(id, dataSale) {
-    const clientExists = await this._clientRepository.getClientById(clientId);
-
-    let error = "";
+  async updateSaleById(id, { value, data, clientid }) {
+    const clientExists = await this._clientRepository.getClientById(clientid);
 
     if (!clientExists) {
-      error += "Client not exists!";
+      throw new Error("Client not exists!");
     }
 
-    const productExists = await this._productRepository.getProductById(
-      productId
-    );
-
-    if (!productExists) {
-      error += "Product not exists!";
-    }
-
-    if (error) {
-      throw new Error(error);
-    }
-
-    const saleUpdated = await this._saleRepository.updateSaleById(id, dataSale);
+    const saleUpdated = await this._saleRepository.updateSaleById(id, {
+      value,
+      data,
+      clientid,
+    });
 
     return saleUpdated;
   }
@@ -102,8 +92,8 @@ export class SaleService {
       throw new Error("Sale not exists!");
     }
 
-    const product = await this._productRepository.getProductById(
-      sale.productId
+    const productExists = await this._productRepository.getProductById(
+      sale.productid
     );
 
     const productUpdated = {
@@ -111,8 +101,8 @@ export class SaleService {
       stock: productExists.stock + 1,
     };
 
-    this._productRepository.updateProductById(
-      product.productId,
+    await this._productRepository.updateProductById(
+      productExists.productid,
       productUpdated
     );
 

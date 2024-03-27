@@ -1,8 +1,22 @@
 import { connect } from "../database/connection.js";
 
+import { Sale } from "../models/sale.model.js";
+import { Product } from "../models/product.model.js";
+import { Client } from "../models/client.model.js";
+
 export class SaleRepository {
   async getSales() {
-    const connection = await connect();
+    try {
+      const sales = await Sale.findAll({
+        include: [{ model: Product }, { model: Client }],
+      });
+
+      return sales;
+    } catch (error) {
+      throw error;
+    }
+
+    /* const connection = await connect();
 
     try {
       const { rows } = await connection.query("SELECT * FROM Sales");
@@ -12,11 +26,21 @@ export class SaleRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 
   async getSaleById(id) {
-    const connection = await connect();
+    try {
+      const sale = await Sale.findByPk(id, {
+        include: [{ model: Product }, { model: Client }],
+      });
+
+      return sale;
+    } catch (error) {
+      throw error;
+    }
+
+    /* const connection = await connect();
 
     try {
       const { rows } = await connection.query(
@@ -31,11 +55,23 @@ export class SaleRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 
-  async getSalesByProductId(productId) {
-    const connection = await connect();
+  async getSalesByProductId(productid) {
+    try {
+      const saleByProduct = await Sale.findAll({
+        where: {
+          productid,
+        },
+      });
+
+      return saleByProduct;
+    } catch (error) {
+      throw error;
+    }
+
+    /* const connection = await connect();
 
     try {
       const { rows } = await connection.query(
@@ -48,11 +84,24 @@ export class SaleRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 
-  async create({ value, date, clientId, productId }) {
-    const connection = await connect();
+  async create({ value, data, clientid, productid }) {
+    try {
+      const sale = await Sale.create({
+        value,
+        data,
+        clientid,
+        productid,
+      });
+
+      return sale;
+    } catch (error) {
+      throw error;
+    }
+
+    /* const connection = await connect();
 
     try {
       const sql =
@@ -69,11 +118,27 @@ export class SaleRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 
-  async updateSaleById(id, { value, date, clientId }) {
-    const connection = await connect();
+  async updateSaleById(id, { value, date, clientid }) {
+    try {
+      const [, saleUpdated] = await Sale.update(
+        { value, date, clientid },
+        {
+          where: {
+            saleid: id,
+          },
+          returning: true,
+        }
+      );
+
+      return saleUpdated[0];
+    } catch (error) {
+      throw error;
+    }
+
+    /* const connection = await connect();
 
     try {
       const sql =
@@ -90,11 +155,21 @@ export class SaleRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 
   async deleteSaleById(id) {
-    const connection = await connect();
+    try {
+      await Sale.destroy({
+        where: {
+          saleid: id,
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
+
+    /* const connection = await connect();
 
     try {
       await connection.query("DELETE FROM Sales WHERE saleId = $1", [id]);
@@ -102,6 +177,6 @@ export class SaleRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 }

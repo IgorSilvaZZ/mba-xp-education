@@ -30,18 +30,18 @@ export class SaleController {
   }
 
   async create(req, res, next) {
-    const { value, date, clientId, productId } = req.body;
+    const { value, data, clientId, productId } = req.body;
 
     try {
-      if (!value || !date || !clientId || !productId) {
-        throw new Error("Value, Date, ClientId and ProductId is required!");
+      if (!value || !data || !clientId || !productId) {
+        throw new Error("Value, Data, ClientId and ProductId is required!");
       }
 
       const dataSale = {
         value,
-        date,
-        clientId,
-        productId,
+        data,
+        clientid: clientId,
+        productid: productId,
       };
 
       const sale = await this.saleService.create(dataSale);
@@ -54,21 +54,21 @@ export class SaleController {
 
   async update(req, res, next) {
     const { id } = req.params;
-    const { value, date, clientId } = req.body;
+    const { value, data, clientId } = req.body;
 
     try {
       if (!id) {
         throw new Error("Id is required!");
       }
 
-      if (!value || !date || !clientId) {
-        throw new Error("Value, Date, and ClientId is required!");
+      if (!value || !data || !clientId) {
+        throw new Error("Value, Data, and ClientId is required!");
       }
 
       const dataSale = {
         value,
-        date,
-        clientId,
+        data,
+        clientid: clientId,
       };
 
       const saleUpdated = await this.saleService.updateSaleById(id, dataSale);

@@ -1,4 +1,4 @@
-import { connect } from "../database/connection.js";
+/* import { connect } from "../database/connection.js"; */
 
 import { Product } from "../models/product.model.js";
 
@@ -61,6 +61,8 @@ export class ProductRepository {
         stock,
         supplierid,
       });
+
+      return product;
     } catch (error) {
       throw error;
     }

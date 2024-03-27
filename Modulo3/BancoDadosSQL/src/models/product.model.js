@@ -4,7 +4,7 @@ import { sequelizeConnect } from "../database/connection.js";
 
 import { Supplier } from "./supplier.model.js";
 
-const Product = new sequelizeConnect.define(
+const Product = sequelizeConnect.define(
   "products",
   {
     productid: {
@@ -34,7 +34,7 @@ const Product = new sequelizeConnect.define(
 );
 
 Product.belongsTo(Supplier, {
-  foreignKey: "supplierId",
+  foreignKey: "supplierid",
 });
 
 export { Product };

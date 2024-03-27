@@ -18,7 +18,7 @@ const Sale = sequelizeConnect.define(
       type: DOUBLE,
       allowNull: false,
     },
-    date: {
+    data: {
       type: DATE,
       allowNull: false,
     },
@@ -26,7 +26,7 @@ const Sale = sequelizeConnect.define(
   { underscored: false }
 );
 
-Sale.belongsTo(Client, { foreignKey: "clientId" });
-Sale.belongsTo(Product, { foreignKey: "productId" });
+Sale.belongsTo(Client, { foreignKey: "clientid" });
+Sale.belongsTo(Product, { foreignKey: "productid" });
 
 export { Sale };
