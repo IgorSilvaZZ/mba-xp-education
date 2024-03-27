@@ -1,8 +1,18 @@
 import { connect } from "../database/connection.js";
 
+import { Product } from "../models/product.model.js";
+
 export class ProductRepository {
   async getProducts() {
-    const connection = await connect();
+    try {
+      const products = await Product.findAll();
+
+      return products;
+    } catch (error) {
+      throw error;
+    }
+
+    /* const connection = await connect();
 
     try {
       const { rows } = await connection.query("SELECT * FROM Products");
@@ -12,11 +22,19 @@ export class ProductRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 
   async getProductById(id) {
-    const connection = await connect();
+    try {
+      const product = await Product.findByPk(id);
+
+      return product;
+    } catch (error) {
+      throw error;
+    }
+
+    /* const connection = await connect();
 
     try {
       const { rows } = await connection.query(
@@ -31,11 +49,23 @@ export class ProductRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 
-  async create({ name, description, value, stock, supplierId }) {
-    const connection = await connect();
+  async create({ name, description, value, stock, supplierid }) {
+    try {
+      const product = await Product.create({
+        name,
+        description,
+        value,
+        stock,
+        supplierid,
+      });
+    } catch (error) {
+      throw error;
+    }
+
+    /* const connection = await connect();
 
     try {
       const sql =
@@ -51,11 +81,27 @@ export class ProductRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 
   async updateProductById(id, { name, description, value, stock, supplierId }) {
-    const connection = await connect();
+    try {
+      const [, productUpdated] = await Product.update(
+        { name, description, value, stock, supplierId },
+        {
+          where: {
+            productid: id,
+          },
+          returning: true,
+        }
+      );
+
+      return productUpdated[0];
+    } catch (error) {
+      throw error;
+    }
+
+    /* const connection = await connect();
 
     try {
       const sql =
@@ -72,11 +118,21 @@ export class ProductRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 
   async deleteProductById(id) {
-    const connection = await connect();
+    try {
+      await Product.destroy({
+        where: {
+          productid: id,
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
+
+    /* const connection = await connect();
 
     try {
       await connection.query("DELETE FROM Products WHERE productId = $1", [id]);
@@ -84,6 +140,6 @@ export class ProductRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 }

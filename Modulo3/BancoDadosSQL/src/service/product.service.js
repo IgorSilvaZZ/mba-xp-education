@@ -1,10 +1,12 @@
 import { ProductRepository } from "../repositories/product.repository.js";
 import { SupplierRepository } from "../repositories/supplier.repository.js";
+import { SaleRepository } from "../repositories/sale.repository.js";
 
 export class ProductService {
   constructor() {
     this._productRepository = new ProductRepository();
     this._supplierRepository = new SupplierRepository();
+    this._saleRepository = new SaleRepository();
   }
 
   async getProducts() {
@@ -51,6 +53,14 @@ export class ProductService {
   }
 
   async deleteProduct(id) {
+    const productSaleExists = await this._saleRepository.getSalesByProductId(
+      id
+    );
+
+    if (!productSaleExists) {
+      throw new Error("Product error in delete!");
+    }
+
     await this._productRepository.deleteProductById(id);
   }
 }

@@ -1,8 +1,18 @@
-import { connect } from "../database/connection.js";
+/* import { connect } from "../database/connection.js"; */
+
+import { Supplier } from "../models/supplier.model.js";
 
 export class SupplierRepository {
   async getSuppliers() {
-    const connection = await connect();
+    try {
+      const suppliers = await Supplier.findAll();
+
+      return suppliers;
+    } catch (error) {
+      throw error;
+    }
+
+    /* const connection = await connect();
 
     try {
       const { rows } = await connection.query("SELECT * FROM Suppliers");
@@ -12,11 +22,19 @@ export class SupplierRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 
   async getSupplierById(id) {
-    const connection = await connect();
+    try {
+      const supplier = await Supplier.findByPk(id);
+
+      return supplier;
+    } catch (error) {
+      throw error;
+    }
+
+    /* const connection = await connect();
 
     try {
       const { rows } = await connection.query(
@@ -31,11 +49,25 @@ export class SupplierRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 
   async create({ name, cnpj, phone, email, address }) {
-    const connection = await connect();
+    try {
+      const supplier = await Supplier.create({
+        name,
+        cnpj,
+        phone,
+        email,
+        address,
+      });
+
+      return supplier;
+    } catch (error) {
+      throw error;
+    }
+
+    /* const connection = await connect();
 
     try {
       const sql =
@@ -52,11 +84,27 @@ export class SupplierRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 
   async updateSupplierById(id, { name, cnpj, phone, email, address }) {
-    const connection = await connect();
+    try {
+      const [, supplierUpdated] = await Supplier.update(
+        { name, cnpj, phone, email, address },
+        {
+          where: {
+            supplierid: id,
+          },
+          returning: true,
+        }
+      );
+
+      return supplierUpdated[0];
+    } catch (error) {
+      throw error;
+    }
+
+    /* const connection = await connect();
 
     try {
       const sql =
@@ -73,11 +121,21 @@ export class SupplierRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 
   async deleteSupplierById(id) {
-    const connection = await connect();
+    try {
+      await Supplier.destroy({
+        where: {
+          supplierid: id,
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
+
+    /* const connection = await connect();
 
     try {
       await connection.query("DELETE FROM Suppliers WHERE supplierId = $1", [
@@ -87,6 +145,6 @@ export class SupplierRepository {
       throw error;
     } finally {
       connection.release();
-    }
+    } */
   }
 }
