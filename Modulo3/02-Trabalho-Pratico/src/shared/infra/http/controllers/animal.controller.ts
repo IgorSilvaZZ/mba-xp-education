@@ -23,9 +23,7 @@ export class AnimalController {
 
       return res.json(animais);
     } catch (error) {
-      return res
-        .status(400)
-        .json({ message: "Erro ao criar novo animal", error });
+      return res.status(400).json({ message: "Erro ao listar animais", error });
     }
   }
 
@@ -33,11 +31,9 @@ export class AnimalController {
     const { animalId } = req.params;
 
     try {
-
       const animal = await this.findByIdAnimalUseCase.execute(Number(animalId));
 
       return res.json(animal);
-      
     } catch (error) {
       return res
         .status(400)
@@ -49,17 +45,17 @@ export class AnimalController {
     const { proprietarioId } = req.params;
 
     try {
-      
-      const animais = await this.listAllAnimalFindByProprietarioIdUseCase.execute(Number(proprietarioId));
+      const animais =
+        await this.listAllAnimalFindByProprietarioIdUseCase.execute(
+          Number(proprietarioId)
+        );
 
       return res.json(animais);
-
     } catch (error) {
       return res
         .status(400)
         .json({ message: "Erro ao criar novo animal", error });
     }
-
   }
 
   async create(req: Request, res: Response) {
@@ -110,17 +106,13 @@ export class AnimalController {
     const { animalId } = req.params;
 
     try {
-
       await this.deleteAnimalUseCase.execute(Number(animalId));
 
       return res.status(204).send();
-      
     } catch (error) {
       return res
         .status(400)
         .json({ message: "Erro ao criar novo animal", error });
     }
-
   }
-
 }
