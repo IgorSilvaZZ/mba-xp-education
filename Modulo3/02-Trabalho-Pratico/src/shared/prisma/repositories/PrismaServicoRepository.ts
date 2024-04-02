@@ -6,7 +6,15 @@ import { ServicoRepository } from "../../../modules/servicos/respositories/Servi
 
 export class PrismaServicoRepository implements ServicoRepository {
   async getAll(): Promise<Servico[]> {
-    const servicos = await prisma.servico.findMany();
+    const servicos = await prisma.servico.findMany({
+      include: {
+        animal: {
+          include: {
+            proprietario: true
+          }
+        }
+      }
+    });
 
     return servicos;
   }
@@ -19,7 +27,11 @@ export class PrismaServicoRepository implements ServicoRepository {
         },
       },
       include: {
-        animal: true,
+        animal: {
+          include: {
+            proprietario: true
+          }
+        },
       },
     });
 

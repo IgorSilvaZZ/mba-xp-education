@@ -8,14 +8,21 @@ import { UpdateAnimalDTO } from "../../../modules/animais/dtos/UpdateAnimalDTO";
 
 export class PrismaAnimalRepository implements AnimalRepository {
   async getAll(): Promise<Animal[]> {
-    const animais = await prisma.animais.findMany();
+    const animais = await prisma.animais.findMany({
+      include: {
+        proprietario: true
+      }
+    });
 
     return animais;
   }
 
   async findById(animalId: number): Promise<Animal | null> {
     const animal = await prisma.animais.findFirst({
-      where: { animalId }
+      where: { animalId },
+      include: {
+        proprietario: true
+      }
     });
 
     return animal;
@@ -23,7 +30,10 @@ export class PrismaAnimalRepository implements AnimalRepository {
 
   async findByProprietarioId(fkProprietario: number): Promise<Animal[]> {
     const animais = await prisma.animais.findMany({
-      where: { fkProprietario }
+      where: { fkProprietario },
+      include: {
+        proprietario: true
+      }
     });
 
     return animais;
