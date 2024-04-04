@@ -81,5 +81,30 @@ describe('calcularPrestacoes', () => {
     const soma = arrendodar(prestacoes[0] + prestacoes[1] + prestacoes[2]);
 
     expect(soma).toBe(montante);
+
+    for (let i = 0; i < prestacoes.length - 1; i++) {
+      const j = i + 1;
+
+      expect(prestacoes[i]).toBeGreaterThanOrEqual(prestacoes[j]);
+    }
+  });
+
+  test('Desafio semi-final', () => {
+    const numeroPrestacoes = 3;
+    const montante = 101.994;
+
+    const prestacoes = calcularPrestacoes(montante, numeroPrestacoes);
+
+    expect(prestacoes.length).toBe(numeroPrestacoes);
+
+    const soma = arrendodar(prestacoes[0] + prestacoes[1] + prestacoes[2]);
+
+    expect(soma).toBe(arrendodar(montante));
+
+    for (let i = 0; i < prestacoes.length - 1; i++) {
+      const j = i + 1;
+
+      expect(prestacoes[i]).toBeGreaterThanOrEqual(prestacoes[j]);
+    }
   });
 });

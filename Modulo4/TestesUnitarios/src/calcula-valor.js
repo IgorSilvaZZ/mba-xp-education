@@ -21,13 +21,15 @@ const calcularPrestacoes = (montante, numeroParcelas) => {
   let somaPrestacoes = resultado.reduce((a, b) => a + b);
   let diferenca = montante - somaPrestacoes;
 
-  let i = 0;
+  const fator = diferenca > 0 ? 1 : -1;
+
+  let i = diferenca > 0 ? 0 : resultado.length - 1;
 
   while (diferenca !== 0) {
-    resultado[i] = resultado[i] + 0.01;
+    resultado[i] = arrendodar(resultado[i] + 0.01 * fator);
     somaPrestacoes = resultado.reduce((a, b) => a + b);
     diferenca = arrendodar(montante - somaPrestacoes);
-    i++;
+    i += fator;
   }
 
   return resultado;
