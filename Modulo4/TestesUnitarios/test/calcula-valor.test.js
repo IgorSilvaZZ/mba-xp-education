@@ -1,5 +1,7 @@
 /// <reference types="@types/jest" />
 
+require('./extensoes');
+
 const {
   calcularMontante,
   arrendodar,
@@ -78,15 +80,9 @@ describe('calcularPrestacoes', () => {
     // Então (then)
     expect(prestacoes.length).toBe(numeroPrestacoes);
 
-    const soma = arrendodar(prestacoes[0] + prestacoes[1] + prestacoes[2]);
+    expect(prestacoes).tenhaSomaDeValoresIgual(montante);
 
-    expect(soma).toBe(montante);
-
-    for (let i = 0; i < prestacoes.length - 1; i++) {
-      const j = i + 1;
-
-      expect(prestacoes[i]).toBeGreaterThanOrEqual(prestacoes[j]);
-    }
+    expect(prestacoes).sejaDescrescente();
   });
 
   test('Desafio semi-final', () => {
@@ -97,14 +93,13 @@ describe('calcularPrestacoes', () => {
 
     expect(prestacoes.length).toBe(numeroPrestacoes);
 
-    const soma = arrendodar(prestacoes[0] + prestacoes[1] + prestacoes[2]);
+    expect(prestacoes).tenhaSomaDeValoresIgual(montante);
 
-    expect(soma).toBe(arrendodar(montante));
+    expect(prestacoes).sejaDescrescente();
 
-    for (let i = 0; i < prestacoes.length - 1; i++) {
-      const j = i + 1;
+    // Exemplo utilizando not
+    const meuArray = [1, 2, 3, 4, 5];
 
-      expect(prestacoes[i]).toBeGreaterThanOrEqual(prestacoes[j]);
-    }
+    expect(meuArray).not.sejaDescrescente();
   });
 });

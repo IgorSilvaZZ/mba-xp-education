@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "jest:watch": "jest --watch",
     "lint": "eslint src/** test/** --fix"
   },
