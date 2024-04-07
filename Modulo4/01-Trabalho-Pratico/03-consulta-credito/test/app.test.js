@@ -38,12 +38,12 @@ describe('Testes de Integração', () => {
 
   const resultadoEsperadoClientes = [
     {
-      Nome: 'Igor Silva',
-      CPF: '000.000.000-00',
+      CPF: '386.193.850-20',
+      Nome: 'Beatriz Dos Santos Silva',
     },
     {
-      Nome: 'Beatriz Dos Santos Silva',
-      CPF: '000.000.000-00',
+      CPF: '524.888.190-00',
+      Nome: 'Igor Silva',
     },
   ];
 
@@ -74,13 +74,17 @@ describe('Testes de Integração', () => {
   //     .then((res) => expect(res.status).toBe(400));
   // });
 
-  test.only('Listando todos os clientes persistidos na base', async () => {
+  test('Listando todos os clientes persistidos na base', async () => {
     await db.cliente.create(clientBia);
     await db.cliente.create(clientIgor);
 
     const res = await request(app).get('/cliente');
 
-    console.log(res);
+    const response = res.body;
+
+    expect(res.status).toBe(200);
+    expect(res.type).toBe('application/json');
+    expect(response).toMatchSnapshot(resultadoEsperadoClientes);
   });
 
   test('CENÁRIO 01', async () => {
@@ -102,8 +106,9 @@ describe('Testes de Integração', () => {
     expect(cliente.CPF).toBe(clienteJoao.CPF);
 
     const consulta = await db.consulta.findOne({
-      where: { ClienteCPF: clienteJoao.CPF },
+      where: { clienteCPF: clienteJoao.CPF },
     });
+
     expect(consulta.Valor).toBe(101.75);
   });
 
@@ -114,7 +119,7 @@ describe('Testes de Integração', () => {
       NumPrestacoes: 2,
       Juros: 0.5,
       Prestacoes: '1, 1',
-      ClienteCPF: clienteJoao.CPF,
+      clienteCPF: clienteJoao.CPF,
       Montante: 2,
       createdAt: '2016-06-22 19:10:25-07',
     });
@@ -126,7 +131,7 @@ describe('Testes de Integração', () => {
     expect(res.status).toBe(201);
 
     const count = await db.consulta.count({
-      where: { ClienteCPF: clienteJoao.CPF },
+      where: { clienteCPF: clienteJoao.CPF },
     });
     expect(count).toBe(2);
   });

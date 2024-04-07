@@ -4,12 +4,6 @@ const db = require('./db');
 
 const juros = 0.025;
 
-const listarClientes = async () => {
-  const clientes = await db.cliente.findAll();
-
-  return clientes;
-};
-
 const consultar = async (nome, CPF, valor, parcelas) => {
   let cliente = await db.cliente.findOne({
     where: { CPF },
@@ -23,7 +17,7 @@ const consultar = async (nome, CPF, valor, parcelas) => {
   }
 
   const ultimaConsulta = await db.consulta.findOne({
-    where: { ClienteCPF: CPF },
+    where: { clienteCPF: CPF },
     order: [[db.sequelize.col('createdAt'), 'DESC']],
   });
 
@@ -46,7 +40,7 @@ const consultar = async (nome, CPF, valor, parcelas) => {
     NumPrestacoes: parcelas,
     Juros: juros,
     Prestacoes: prestacoes.join(', '),
-    ClienteCPF: cliente.CPF,
+    clienteCPF: cliente.CPF,
     Montante: montante,
   };
 
@@ -62,6 +56,5 @@ const consultar = async (nome, CPF, valor, parcelas) => {
 };
 
 module.exports = {
-  listarClientes,
   consultar,
 };

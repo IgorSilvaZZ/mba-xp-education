@@ -4,7 +4,8 @@ const app = express();
 
 const { check, validationResult } = require('express-validator');
 
-const { consultar, listarClientes } = require('./consulta-cliente');
+const { consultar } = require('./consulta-cliente');
+const { listarClientes } = require('./listar-clientes');
 
 app.use(express.json());
 

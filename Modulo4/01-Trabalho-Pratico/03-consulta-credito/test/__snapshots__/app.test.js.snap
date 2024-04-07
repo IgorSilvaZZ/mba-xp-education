@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports['Testes de Integração CENÁRIO 01 1'] = `
+exports[`Testes de Integração CENÁRIO 01 1`] = `
 Object {
   "juros": 0.025,
   "montante": 106.9,
@@ -14,7 +14,7 @@ Object {
 }
 `;
 
-exports['Testes de Integração CENÁRIO 02 1'] = `
+exports[`Testes de Integração CENÁRIO 02 1`] = `
 Object {
   "juros": 0.025,
   "montante": 106.9,
@@ -28,7 +28,7 @@ Object {
 }
 `;
 
-exports['Testes de Integração CENÁRIO 03 1'] = `
+exports[`Testes de Integração CENÁRIO 03 1`] = `
 Object {
   "juros": 0.025,
   "montante": 106.9,
@@ -40,4 +40,17 @@ Object {
   ],
   "primeiraPrestacao": 35.64,
 }
+`;
+
+exports[`Testes de Integração Listando todos os clientes persistidos na base 1`] = `
+Array [
+  Object {
+    "CPF": "386.193.850-20",
+    "Nome": "Beatriz Dos Santos Silva",
+  },
+  Object {
+    "CPF": "524.888.190-00",
+    "Nome": "Igor Silva",
+  },
+]
 `;
