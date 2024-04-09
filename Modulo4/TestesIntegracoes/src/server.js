@@ -1,3 +1,9 @@
 const { app } = require('./app');
 
-app.listen(3333, () => console.log('Server ir running!'));
+const { sequelize } = require('./db');
+
+sequelize.sync().then(async () => {
+  await console.log('Conectado ao banco de dados!');
+});
+
+app.listen(3333, () => console.log('Server is running!'));
