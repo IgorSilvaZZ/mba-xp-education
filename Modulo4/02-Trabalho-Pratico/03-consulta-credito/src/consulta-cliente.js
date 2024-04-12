@@ -4,12 +4,6 @@ const db = require('./db');
 
 const juros = 0.025;
 
-const listarClientes = async () => {
-  const clientes = await db.cliente.findAll();
-
-  return clientes;
-};
-
 const consultar = async (nome, CPF, valor, parcelas) => {
   let cliente = await db.cliente.findOne({
     where: { CPF },
@@ -24,13 +18,13 @@ const consultar = async (nome, CPF, valor, parcelas) => {
 
   const ultimaConsulta = await db.consulta.findOne({
     where: { ClienteCPF: CPF },
-    order: [[db.sequelize.col('createdAt'), 'DESC']],
+    order: [
+      [db.sequelize.col('createdAt'), 'DESC'],
+    ],
   });
 
   if (ultimaConsulta) {
-    const diferenca = Math.abs(
-      ultimaConsulta.createdAt.getTime() - new Date().getTime()
-    );
+    const diferenca = Math.abs(ultimaConsulta.createdAt.getTime() - new Date().getTime());
     const diferencaDias = Math.round(diferenca / (1000 * 60 * 60 * 24));
 
     if (diferencaDias <= 30) {
@@ -42,12 +36,12 @@ const consultar = async (nome, CPF, valor, parcelas) => {
   const prestacoes = calculaValor.calcularPrestacoes(montante, parcelas);
 
   const novaConsulta = {
-    valor,
-    numprestacoes: parcelas,
-    juros: juros,
-    prestacoes: prestacoes.join(', '),
-    clientecpf: cliente.CPF,
-    montante,
+    Valor: valor,
+    NumPrestacoes: parcelas,
+    Juros: juros,
+    Prestacoes: prestacoes.join(', '),
+    ClienteCPF: cliente.CPF,
+    Montante: montante,
   };
 
   await db.consulta.create(novaConsulta);
@@ -62,6 +56,5 @@ const consultar = async (nome, CPF, valor, parcelas) => {
 };
 
 module.exports = {
-  listarClientes,
   consultar,
 };

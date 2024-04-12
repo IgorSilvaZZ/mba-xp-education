@@ -1,11 +1,12 @@
-/// <reference types="@types/jest" />
-
+const express = require('express')
 const request = require('supertest');
 
-const app = require('../src/app');
 const db = require('../src/db');
 
+const app = express().use(express.json()).use('/', require('../src/app'))
+
 describe('Testes de Integração', () => {
+  
   beforeEach(async () => {
     await db.cliente.destroy({ where: {} });
     await db.consulta.destroy({ where: {} });
@@ -18,16 +19,6 @@ describe('Testes de Integração', () => {
     CPF: '000.000.000-00',
   };
 
-  const clientIgor = {
-    Nome: 'Igor Silva',
-    CPF: '524.888.190-00',
-  };
-
-  const clientBia = {
-    Nome: 'Beatriz Dos Santos Silva',
-    CPF: '386.193.850-20',
-  };
-
   const resultadoEsperado = {
     montante: 106.9,
     juros: 0.025,
@@ -36,17 +27,6 @@ describe('Testes de Integração', () => {
     prestacoes: [35.64, 35.63, 35.63],
   };
 
-  const resultadoEsperadoClientes = [
-    {
-      Nome: 'Igor Silva',
-      CPF: '000.000.000-00',
-    },
-    {
-      Nome: 'Beatriz Dos Santos Silva',
-      CPF: '000.000.000-00',
-    },
-  ];
-
   const payloadRequest = {
     nome: clienteJoao.Nome,
     CPF: clienteJoao.CPF,
@@ -54,10 +34,8 @@ describe('Testes de Integração', () => {
     parcelas: 3,
   };
 
-  test('responder http 200 na raiz - Versão 01', () =>
-    request(app)
-      .get('/')
-      .then(res => expect(res.status).toBe(200)));
+  test('responder http 200 na raiz - Versão 01', () => request(app).get('/')
+    .then((res) => expect(res.status).toBe(200)));
 
   test('responder http 200 na raiz - Versão 02', async () => {
     const res = await request(app).get('/');
@@ -74,15 +52,6 @@ describe('Testes de Integração', () => {
   //     .then((res) => expect(res.status).toBe(400));
   // });
 
-  test('Listando todos os clientes persistidos na base', async () => {
-    await db.cliente.create(clientBia);
-    await db.cliente.create(clientIgor);
-
-    const res = await request(app).get('/cliente');
-
-    console.log(res);
-  });
-
   test('CENÁRIO 01', async () => {
     const res = await request(app)
       .post('/consulta-credito')
@@ -96,38 +65,39 @@ describe('Testes de Integração', () => {
     expect(res.body).toMatchObject(resultadoEsperado);
 
     // Cliente foi armazenado
-    const cliente = await db.cliente.findOne({
-      where: { CPF: clienteJoao.CPF },
-    });
+    const cliente = await db.cliente.findOne({ where: { CPF: clienteJoao.CPF } });
     expect(cliente.CPF).toBe(clienteJoao.CPF);
 
-    const consulta = await db.consulta.findOne({
-      where: { ClienteCPF: clienteJoao.CPF },
-    });
+    const consulta = await db.consulta.findOne({ where: { ClienteCPF: clienteJoao.CPF } });
     expect(consulta.Valor).toBe(101.75);
   });
 
   test('CENÁRIO 02', async () => {
-    await db.cliente.create(clienteJoao);
+
+    await db.cliente.create({
+      Nome:clienteJoao.Nome,
+      CPF:clienteJoao.CPF
+    });
+
     await db.consulta.create({
-      valor: 1,
-      numPrestacoes: 2,
-      juros: 0.5,
-      prestacoes: '1, 1',
-      clienteCPF: clienteJoao.CPF,
-      montante: 2,
+      Valor: 1,
+      NumPrestacoes: 2,
+      Juros: 0.5,
+      Prestacoes: '1, 1',
+      ClienteCPF: clienteJoao.CPF,
+      Montante: 2,
       createdAt: '2016-06-22 19:10:25-07',
     });
 
     const res = await request(app)
       .post('/consulta-credito')
       .send(payloadRequest);
+
+
     expect(res.body).toMatchSnapshot(resultadoEsperado);
     expect(res.status).toBe(201);
 
-    const count = await db.consulta.count({
-      where: { ClienteCPF: clienteJoao.CPF },
-    });
+    const count = await db.consulta.count({ where: { ClienteCPF: clienteJoao.CPF } });
     expect(count).toBe(2);
   });
 
@@ -143,12 +113,15 @@ describe('Testes de Integração', () => {
       .send(payloadRequest);
 
     // Resultado é obtido
+    console.log(res2.body)
     expect(res2.body.erro).toBeDefined();
     expect(res2.status).toBe(405);
   });
 
   test('CENÁRIO 04', async () => {
-    const res = await request(app).post('/consulta-credito').send({});
+    const res = await request(app)
+      .post('/consulta-credito')
+      .send({});
 
     // Resultado é obtido
     expect(res.body.erro).toBeDefined();

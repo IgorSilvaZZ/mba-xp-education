@@ -1,17 +1,18 @@
 const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize({
-  dialect: 'postgres',
-  host: '172.19.0.2',
-  port: 5432,
-  database: 'consulta_credito',
-  username: 'docker',
-  password: 'docker',
+  dialect: 'sqlite',
+  // host: 'localhost',
+  // port: 49153,
+  // database: 'consulta_credito',
+  // username: 'postgres',
+  // password: 'mysecretpassword',
+  storage: './src/database.sqlite',
   logging: false,
 });
 
 const clienteModel = (sequelizeCliente, DataTypes) => {
-  const Cliente = sequelizeCliente.define('cliente', {
+  const Cliente = sequelizeCliente.define('Clientes', {
     CPF: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -29,7 +30,7 @@ const clienteModel = (sequelizeCliente, DataTypes) => {
 };
 
 const consultaModel = (sequelizeConsulta, DataTypes) => {
-  const Consulta = sequelizeConsulta.define('consulta', {
+  const Consulta = sequelizeConsulta.define('Consultas', {
     Valor: {
       type: DataTypes.DOUBLE,
       allowNull: false,
@@ -55,14 +56,41 @@ const consultaModel = (sequelizeConsulta, DataTypes) => {
   return Consulta;
 };
 
+const produtoModel = (sequelizeProduto, DataTypes) => {
+  const Produto = sequelizeProduto.define(
+    'Produtos',
+    {
+      Codigo: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      Descricao: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      Preco: {
+        type: DataTypes.DOUBLE,
+        allowNull: false,
+      },
+    },
+    {
+      timestamps: false,
+    }
+  );
+
+  return Produto;
+};
+
 const cliente = clienteModel(sequelize, Sequelize.DataTypes);
 const consulta = consultaModel(sequelize, Sequelize.DataTypes);
+const produto = produtoModel(sequelize, Sequelize.DataTypes);
 
-cliente.hasMany(consulta, { as: 'consultas' });
+cliente.hasMany(consulta, { as: 'Consultas' });
 consulta.belongsTo(cliente);
 
 module.exports = {
   cliente,
   consulta,
+  produto,
   sequelize,
 };
