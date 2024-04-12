@@ -5,12 +5,12 @@ const sequelize = new Sequelize({
   host: 'localhost',
   port: 5432,
   database: 'consulta_credito',
-  username: 'docker',
+  username: 'postgres',
   password: 'docker',
 });
 
 const clienteModel = (sequelizeCliente, DataTypes) => {
-  const Cliente = sequelizeCliente.define('Cliente', {
+  const Cliente = sequelizeCliente.define('cliente', {
     CPF: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -28,7 +28,7 @@ const clienteModel = (sequelizeCliente, DataTypes) => {
 };
 
 const consultaModel = (sequelizeConsulta, DataTypes) => {
-  const Consulta = sequelizeConsulta.define('Consulta', {
+  const Consulta = sequelizeConsulta.define('consulta', {
     Valor: {
       type: DataTypes.DOUBLE,
       allowNull: false,

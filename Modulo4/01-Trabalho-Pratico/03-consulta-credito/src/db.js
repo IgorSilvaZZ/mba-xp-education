@@ -5,9 +5,8 @@ const sequelize = new Sequelize({
   host: '172.19.0.2',
   port: 5432,
   database: 'consulta_credito',
-  username: 'docker',
+  username: 'postgres',
   password: 'docker',
-  logging: false,
 });
 
 const clienteModel = (sequelizeCliente, DataTypes) => {
