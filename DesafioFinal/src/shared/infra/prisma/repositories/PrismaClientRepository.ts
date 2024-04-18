@@ -1,9 +1,10 @@
-import { prisma } from "..";
+import { prisma } from '..';
 
-import { Client } from "../../../../modules/client/interfaces/Client";
-import { CreateClientDTO } from "../../../../modules/client/dtos/CreateClientDTO";
+import { Client } from '../../../../modules/client/interfaces/Client';
+import { CreateClientDTO } from '../../../../modules/client/dtos/CreateClientDTO';
+import { UpdateClientDTO } from '../../../../modules/client/dtos/UpdateClientDTO';
 
-import { ClientRepository } from "../../../../modules/client/repositories/ClientRepository";
+import { ClientRepository } from '../../../../modules/client/repositories/ClientRepository';
 
 export class PrismaClientRepository implements ClientRepository {
   async findAll(): Promise<Client[]> {
@@ -45,5 +46,14 @@ export class PrismaClientRepository implements ClientRepository {
     });
 
     return client;
+  }
+
+  async update(id: number, data: UpdateClientDTO): Promise<Client> {
+    const clientUpdated = await prisma.client.update({
+      where: { clientId: id },
+      data,
+    });
+
+    return clientUpdated;
   }
 }

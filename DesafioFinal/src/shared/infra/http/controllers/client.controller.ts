@@ -1,18 +1,31 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 
-import { CreateClientUseCase } from "../../../../modules/client/useCases/CreateClientUseCase";
-import { ListAllClientUseCase } from "../../../../modules/client/useCases/ListAllClientUseCase";
+import { ListAllClientUseCase } from '../../../../modules/client/useCases/ListAllClientUseCase';
+import { ListByIdClientUseCase } from '../../../../modules/client/useCases/ListByIdClientUseCase';
+import { CreateClientUseCase } from '../../../../modules/client/useCases/CreateClientUseCase';
+import { UpdateClientUseCase } from '../../../../modules/client/useCases/UpdateClientUseCase';
+import { UpdateClientDTO } from '../../../../modules/client/dtos/UpdateClientDTO';
 
 export class ClientController {
   constructor(
     private listAllClientUseCase: ListAllClientUseCase,
-    private createClientUseCase: CreateClientUseCase
+    private listByIdClientUseCase: ListByIdClientUseCase,
+    private createClientUseCase: CreateClientUseCase,
+    private updateClientUseCase: UpdateClientUseCase,
   ) {}
 
   async get(req: Request, res: Response) {
     const clients = await this.listAllClientUseCase.execute();
 
     return res.json(clients);
+  }
+
+  async getById(req: Request, res: Response) {
+    const { id } = req.params;
+
+    const client = await this.listByIdClientUseCase.execute(Number(id));
+
+    return res.json(client);
   }
 
   async create(req: Request, res: Response) {
@@ -27,5 +40,25 @@ export class ClientController {
     });
 
     return res.status(201).json(client);
+  }
+
+  async update(req: Request, res: Response) {
+    const { id } = req.params;
+    const { name, email, password, telephone, address } = req.body;
+
+    const dataUpdated: UpdateClientDTO = {
+      name,
+      email,
+      password,
+      telephone,
+      address,
+    };
+
+    const clientUpdated = await this.updateClientUseCase.execute(
+      Number(id),
+      dataUpdated,
+    );
+
+    return res.json(clientUpdated);
   }
 }
