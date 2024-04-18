@@ -19,4 +19,8 @@ clientRouter.put('/:id', (req, res) => {
   return clientController.update(req, res);
 });
 
+clientRouter.delete('/:id', (req, res) => {
+  return clientController.delete(req, res);
+});
+
 export { clientRouter };

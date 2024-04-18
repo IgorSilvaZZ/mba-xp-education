@@ -5,6 +5,7 @@ import { ListByIdClientUseCase } from '../../../../modules/client/useCases/ListB
 import { CreateClientUseCase } from '../../../../modules/client/useCases/CreateClientUseCase';
 import { UpdateClientUseCase } from '../../../../modules/client/useCases/UpdateClientUseCase';
 import { UpdateClientDTO } from '../../../../modules/client/dtos/UpdateClientDTO';
+import { DeleteClientUseCase } from '../../../../modules/client/useCases/DeleteClientUseCase';
 
 export class ClientController {
   constructor(
@@ -12,6 +13,7 @@ export class ClientController {
     private listByIdClientUseCase: ListByIdClientUseCase,
     private createClientUseCase: CreateClientUseCase,
     private updateClientUseCase: UpdateClientUseCase,
+    private deleteClientUseCase: DeleteClientUseCase,
   ) {}
 
   async get(req: Request, res: Response) {
@@ -60,5 +62,13 @@ export class ClientController {
     );
 
     return res.json(clientUpdated);
+  }
+
+  async delete(req: Request, res: Response) {
+    const { id } = req.params;
+
+    await this.deleteClientUseCase.execute(Number(id));
+
+    return res.status(204).send();
   }
 }

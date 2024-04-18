@@ -9,4 +9,5 @@ export abstract class ClientRepository {
   abstract findByEmail(email: string): Promise<Client | null>;
   abstract create(data: CreateClientDTO): Promise<Client>;
   abstract update(id: number, data: UpdateClientDTO): Promise<Client>;
+  abstract delete(id: number): Promise<void>;
 }

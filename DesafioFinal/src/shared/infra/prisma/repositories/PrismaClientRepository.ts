@@ -56,4 +56,12 @@ export class PrismaClientRepository implements ClientRepository {
 
     return clientUpdated;
   }
+
+  async delete(id: number) {
+    await prisma.client.delete({
+      where: {
+        clientId: id,
+      },
+    });
+  }
 }
