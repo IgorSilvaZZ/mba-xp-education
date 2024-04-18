@@ -1,25 +1,28 @@
-import express, { Request, Response, NextFunction } from "express";
-import "express-async-errors";
+import express, { Request, Response, NextFunction } from 'express';
+import { ZodError } from 'zod';
+import 'express-async-errors';
 
-import { AppErrors } from "../../errors/AppErrors";
+import { AppErrors } from '../../errors/AppErrors';
 
-import { clientRouter } from "./routes/client.routes";
+import { clientRouter } from './routes/client.routes';
 
 const app = express();
 
 app.use(express.json());
 
-app.use("/client", clientRouter);
+app.use('/client', clientRouter);
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
-  if (error instanceof AppErrors) {
+  if (error instanceof ZodError) {
+    return res.status(400).json(error.issues);
+  } else if (error instanceof AppErrors) {
     return res.status(error.statusCode).json({
       message: error.message,
     });
   }
 
   return res.status(500).json({
-    status: "error",
+    status: 'error',
     message: `Internal server error - ${error.message}`,
   });
 });

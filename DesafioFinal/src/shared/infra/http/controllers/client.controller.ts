@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { z } from 'zod';
 
 import { ListAllClientUseCase } from '../../../../modules/client/useCases/ListAllClientUseCase';
 import { ListByIdClientUseCase } from '../../../../modules/client/useCases/ListByIdClientUseCase';
@@ -23,7 +24,11 @@ export class ClientController {
   }
 
   async getById(req: Request, res: Response) {
-    const { id } = req.params;
+    const paramsSchema = z.object({
+      id: z.string(),
+    });
+
+    const { id } = paramsSchema.parse(req.params);
 
     const client = await this.listByIdClientUseCase.execute(Number(id));
 
@@ -31,7 +36,17 @@ export class ClientController {
   }
 
   async create(req: Request, res: Response) {
-    const { name, email, password, telephone, address } = req.body;
+    const bodySchema = z.object({
+      name: z.string(),
+      email: z.string().email(),
+      password: z.string(),
+      telephone: z.string(),
+      address: z.string(),
+    });
+
+    const { name, email, password, telephone, address } = bodySchema.parse(
+      req.body,
+    );
 
     const client = await this.createClientUseCase.execute({
       name,
@@ -46,7 +61,18 @@ export class ClientController {
 
   async update(req: Request, res: Response) {
     const { id } = req.params;
-    const { name, email, password, telephone, address } = req.body;
+
+    const bodySchema = z.object({
+      name: z.string(),
+      email: z.string().email(),
+      password: z.string(),
+      telephone: z.string(),
+      address: z.string(),
+    });
+
+    const { name, email, password, telephone, address } = bodySchema.parse(
+      req.body,
+    );
 
     const dataUpdated: UpdateClientDTO = {
       name,
