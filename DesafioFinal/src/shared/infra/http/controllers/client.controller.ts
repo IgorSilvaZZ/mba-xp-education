@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
 
+import { UpdateClientDTO } from '../../../../modules/client/dtos/UpdateClientDTO';
+
 import { ListAllClientUseCase } from '../../../../modules/client/useCases/ListAllClientUseCase';
 import { ListByIdClientUseCase } from '../../../../modules/client/useCases/ListByIdClientUseCase';
 import { CreateClientUseCase } from '../../../../modules/client/useCases/CreateClientUseCase';
 import { UpdateClientUseCase } from '../../../../modules/client/useCases/UpdateClientUseCase';
-import { UpdateClientDTO } from '../../../../modules/client/dtos/UpdateClientDTO';
 import { DeleteClientUseCase } from '../../../../modules/client/useCases/DeleteClientUseCase';
 
 export class ClientController {

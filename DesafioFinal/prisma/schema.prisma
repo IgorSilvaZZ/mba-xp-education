@@ -15,3 +15,10 @@ model Client {
   telephone String
   address   String
 }
+
+model Author {
+  authorId  Int    @id @default(autoincrement())
+  name      String
+  email     String
+  telephone String
+}

@@ -5,12 +5,14 @@ import 'express-async-errors';
 import { AppErrors } from '../../errors/AppErrors';
 
 import { clientRouter } from './routes/client.routes';
+import { authorRouter } from './routes/author.routes';
 
 const app = express();
 
 app.use(express.json());
 
 app.use('/client', clientRouter);
+app.use('/author', authorRouter);
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof ZodError) {
