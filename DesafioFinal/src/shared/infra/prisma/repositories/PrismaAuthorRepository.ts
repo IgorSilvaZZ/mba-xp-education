@@ -6,6 +6,12 @@ import { Author } from '../../../../modules/author/interfaces/Author';
 import { AuthorRepository } from '../../../../modules/author/repositories/AuthorRepository';
 
 export class PrismaAuthorRepository implements AuthorRepository {
+  async listAll(): Promise<Author[]> {
+    const authors = await prisma.author.findMany();
+
+    return authors;
+  }
+
   async findById(id: number): Promise<Author | null> {
     const author = await prisma.author.findUnique({
       where: {

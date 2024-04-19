@@ -1,10 +1,30 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
 
+import { ListAllAuthorsUseCase } from '../../../../modules/author/useCases/ListAllAuthorsUseCase';
+import { ListAuthorByIdUseCase } from '../../../../modules/author/useCases/ListAuthorByIdUseCase';
 import { CreateAuthorUseCase } from '../../../../modules/author/useCases/CreateAuthorUseCase';
 
 export class AuthorController {
-  constructor(private createAuthorUseCase: CreateAuthorUseCase) {}
+  constructor(
+    private listAllAuthorsUseCase: ListAllAuthorsUseCase,
+    private listAuthorByIdUseCase: ListAuthorByIdUseCase,
+    private createAuthorUseCase: CreateAuthorUseCase,
+  ) {}
+
+  async get(req: Request, res: Response) {
+    const authors = await this.listAllAuthorsUseCase.execute();
+
+    return res.json(authors);
+  }
+
+  async getById(req: Request, res: Response) {
+    const { id } = req.params;
+
+    const author = await this.listAuthorByIdUseCase.execute(Number(id));
+
+    return res.json(author);
+  }
 
   async create(req: Request, res: Response) {
     const bodySchema = z.object({
