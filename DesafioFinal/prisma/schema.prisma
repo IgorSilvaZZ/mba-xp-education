@@ -21,4 +21,15 @@ model Author {
   name      String
   email     String
   telephone String
+  Book      Book[]
+}
+
+model Book {
+  bookId     Int    @id @default(autoincrement())
+  name       String
+  value      Float
+  stock      Int
+  fkAuthorId Int
+
+  author Author @relation(fields: [fkAuthorId], references: [authorId])
 }
