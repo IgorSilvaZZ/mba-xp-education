@@ -16,4 +16,12 @@ authorRouter.post('/', (req, res) => {
   return authorController.create(req, res);
 });
 
+authorRouter.put('/:id', (req, res) => {
+  return authorController.update(req, res);
+});
+
+authorRouter.delete('/:id', (req, res) => {
+  return authorController.delete(req, res);
+});
+
 export { authorRouter };

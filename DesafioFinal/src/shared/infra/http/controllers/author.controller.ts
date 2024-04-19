@@ -4,12 +4,16 @@ import { z } from 'zod';
 import { ListAllAuthorsUseCase } from '../../../../modules/author/useCases/ListAllAuthorsUseCase';
 import { ListAuthorByIdUseCase } from '../../../../modules/author/useCases/ListAuthorByIdUseCase';
 import { CreateAuthorUseCase } from '../../../../modules/author/useCases/CreateAuthorUseCase';
+import { UpdateAuthorUseCase } from '../../../../modules/author/useCases/UpdateAuthorUseCase';
+import { DeleteAuthorUseCase } from '../../../../modules/author/useCases/DeleteAuthorUseCase';
 
 export class AuthorController {
   constructor(
     private listAllAuthorsUseCase: ListAllAuthorsUseCase,
     private listAuthorByIdUseCase: ListAuthorByIdUseCase,
     private createAuthorUseCase: CreateAuthorUseCase,
+    private updateAuthorUseCase: UpdateAuthorUseCase,
+    private deleteAuthorUseCase: DeleteAuthorUseCase,
   ) {}
 
   async get(req: Request, res: Response) {
@@ -42,5 +46,33 @@ export class AuthorController {
     });
 
     return res.status(201).json(author);
+  }
+
+  async update(req: Request, res: Response) {
+    const { id } = req.params;
+
+    const bodySchema = z.object({
+      name: z.string(),
+      email: z.string().email(),
+      telephone: z.string(),
+    });
+
+    const { name, email, telephone } = bodySchema.parse(req.body);
+
+    const updateAuthor = await this.updateAuthorUseCase.execute(Number(id), {
+      name,
+      email,
+      telephone,
+    });
+
+    return res.json(updateAuthor);
+  }
+
+  async delete(req: Request, res: Response) {
+    const { id } = req.params;
+
+    await this.deleteAuthorUseCase.execute(Number(id));
+
+    return res.status(204).send();
   }
 }

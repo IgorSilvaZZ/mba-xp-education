@@ -1,6 +1,7 @@
 import { prisma } from '..';
 
 import { CreateAuthorDTO } from '../../../../modules/author/dtos/CreateAuthorDTO';
+import { UpdateAuthorDTO } from '../../../../modules/author/dtos/UpdateAuthorDTO';
 
 import { Author } from '../../../../modules/author/interfaces/Author';
 import { AuthorRepository } from '../../../../modules/author/repositories/AuthorRepository';
@@ -38,5 +39,20 @@ export class PrismaAuthorRepository implements AuthorRepository {
     });
 
     return author;
+  }
+
+  async update(id: number, data: UpdateAuthorDTO): Promise<Author> {
+    const updateAuthor = await prisma.author.update({
+      where: { authorId: id },
+      data,
+    });
+
+    return updateAuthor;
+  }
+
+  async delete(id: number): Promise<void> {
+    await prisma.author.delete({
+      where: { authorId: id },
+    });
   }
 }
