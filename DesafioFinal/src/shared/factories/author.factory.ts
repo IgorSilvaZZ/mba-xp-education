@@ -1,4 +1,5 @@
 import { PrismaAuthorRepository } from '../infra/prisma/repositories/PrismaAuthorRepository';
+import { PrismaBookRepository } from '../infra/prisma/repositories/PrismaBookRepository';
 
 import { AuthorController } from '../infra/http/controllers/author.controller';
 
@@ -9,12 +10,16 @@ import { UpdateAuthorUseCase } from '../../modules/author/useCases/UpdateAuthorU
 import { DeleteAuthorUseCase } from '../../modules/author/useCases/DeleteAuthorUseCase';
 
 const prismaAuthorRepository = new PrismaAuthorRepository();
+const prismaBookRepository = new PrismaBookRepository();
 
 const listAllAuthorsUseCase = new ListAllAuthorsUseCase(prismaAuthorRepository);
 const listAuthorByIdUseCase = new ListAuthorByIdUseCase(prismaAuthorRepository);
 const createAuthorUseCase = new CreateAuthorUseCase(prismaAuthorRepository);
 const updateAuthorUseCase = new UpdateAuthorUseCase(prismaAuthorRepository);
-const deleteAuthorUseCase = new DeleteAuthorUseCase(prismaAuthorRepository);
+const deleteAuthorUseCase = new DeleteAuthorUseCase(
+  prismaAuthorRepository,
+  prismaBookRepository,
+);
 
 const authorController = new AuthorController(
   listAllAuthorsUseCase,

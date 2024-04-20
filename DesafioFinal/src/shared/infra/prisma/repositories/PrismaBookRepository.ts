@@ -40,6 +40,14 @@ export class PrismaBookRepository implements BookRepository {
     return book;
   }
 
+  async findBooksAuthor(fkAuthorId: number): Promise<Book[]> {
+    const booksAuthor = await prisma.book.findMany({
+      where: { fkAuthorId },
+    });
+
+    return booksAuthor;
+  }
+
   async create(data: CreateBookDTO): Promise<Book> {
     const book = await prisma.book.create({
       data: {
