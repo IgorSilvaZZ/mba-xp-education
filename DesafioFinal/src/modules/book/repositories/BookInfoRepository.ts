@@ -1,4 +1,4 @@
-import { BookInfo } from '../interfaces/BookInfo';
+import { BookInfo, Evaluations } from '../interfaces/BookInfo';
 import { CreateBookInfoDTO } from '../dtos/CreateBookInfoDTO';
 import { CreateEvaluationBookDTO } from '../dtos/CreateEvaluationBookDTO';
 
@@ -7,7 +7,7 @@ export abstract class BookInfoRepository {
   abstract createEvaluationBook(
     bookId: number,
     data: CreateEvaluationBookDTO,
-  ): Promise<BookInfo>;
+  ): Promise<Evaluations>;
   abstract deleteBookInfo(bookId: number): Promise<void>;
   abstract deleteEvaluationBook(bookId: number, index: number): Promise<void>;
 }

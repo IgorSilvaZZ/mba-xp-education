@@ -16,6 +16,17 @@ export class PrismaBookRepository implements BookRepository {
 
     return books;
   }
+
+  async findByName(name: string): Promise<Book | null> {
+    const book = await prisma.book.findFirst({
+      where: {
+        name,
+      },
+    });
+
+    return book;
+  }
+
   async findById(id: number): Promise<Book | null> {
     const book = await prisma.book.findFirst({
       where: {
@@ -28,6 +39,7 @@ export class PrismaBookRepository implements BookRepository {
 
     return book;
   }
+
   async create(data: CreateBookDTO): Promise<Book> {
     const book = await prisma.book.create({
       data: {
@@ -38,6 +50,7 @@ export class PrismaBookRepository implements BookRepository {
 
     return book;
   }
+
   async update(id: number, data: UpdateBookDTO): Promise<Book> {
     const bookUpdated = await prisma.book.update({
       where: {
@@ -47,5 +60,18 @@ export class PrismaBookRepository implements BookRepository {
     });
 
     return bookUpdated;
+  }
+
+  async updateStock(id: number, stock: number): Promise<Book> {
+    const bookStockUpdated = await prisma.book.update({
+      where: {
+        bookId: id,
+      },
+      data: {
+        stock,
+      },
+    });
+
+    return bookStockUpdated;
   }
 }
