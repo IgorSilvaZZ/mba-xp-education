@@ -8,8 +8,17 @@ import { BookInfoRepository } from '../../../../modules/book/repositories/BookIn
 
 import { CreateBookInfoDTO } from '../../../../modules/book/dtos/CreateBookInfoDTO';
 import { CreateEvaluationBookDTO } from '../../../../modules/book/dtos/CreateEvaluationBookDTO';
+import { UpdateBookInfoDTO } from '../../../../modules/book/dtos/UpdateBookInfoDTO';
 
 export class MongooseBookInfoRepository implements BookInfoRepository {
+  async findByBookId(id: number): Promise<BookInfo | null> {
+    const bookInfo = await BookInfoModel.findOne({
+      bookId: id,
+    });
+
+    return bookInfo;
+  }
+
   async create(data: CreateBookInfoDTO): Promise<BookInfo> {
     const bookInfo = await BookInfoModel.create({
       ...data,
@@ -17,6 +26,15 @@ export class MongooseBookInfoRepository implements BookInfoRepository {
     });
 
     return bookInfo;
+  }
+
+  async update(bookId: number, data: UpdateBookInfoDTO): Promise<void> {
+    await BookInfoModel.updateOne(
+      {
+        bookId,
+      },
+      { $set: data },
+    );
   }
 
   async createEvaluationBook(
