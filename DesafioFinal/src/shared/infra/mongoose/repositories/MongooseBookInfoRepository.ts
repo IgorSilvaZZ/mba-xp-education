@@ -37,11 +37,24 @@ export class MongooseBookInfoRepository implements BookInfoRepository {
     );
   }
 
+  async findEvaluationByIndex(
+    bookId: number,
+    indexEvaluation: number,
+  ): Promise<Evaluations | null> {
+    const bookInfo = await BookInfoModel.findOne({ bookId });
+
+    const evaluationExists = bookInfo?.evaluations[indexEvaluation] ?? null;
+
+    return evaluationExists;
+  }
+
   async createEvaluationBook(
     bookId: number,
     data: CreateEvaluationBookDTO,
   ): Promise<Evaluations> {
-    const bookInfo = await BookInfoModel.findById(bookId);
+    const bookInfo = await BookInfoModel.findOne({
+      bookId,
+    });
 
     const newEvaluation = {
       ...data,
@@ -59,7 +72,7 @@ export class MongooseBookInfoRepository implements BookInfoRepository {
   }
 
   async deleteEvaluationBook(bookId: number, index: number): Promise<void> {
-    const bookInfo = await BookInfoModel.findById(bookId);
+    const bookInfo = await BookInfoModel.findOne({ bookId });
 
     bookInfo?.evaluations.splice(index, 1);
 

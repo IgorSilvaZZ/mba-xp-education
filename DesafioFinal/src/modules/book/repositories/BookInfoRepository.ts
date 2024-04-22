@@ -11,6 +11,10 @@ export abstract class BookInfoRepository {
     bookId: number,
     data: CreateEvaluationBookDTO,
   ): Promise<Evaluations>;
+  abstract findEvaluationByIndex(
+    bookId: number,
+    indexEvaluation: number,
+  ): Promise<Evaluations | null>;
   abstract deleteBookInfo(bookId: number): Promise<void>;
   abstract deleteEvaluationBook(bookId: number, index: number): Promise<void>;
 }
