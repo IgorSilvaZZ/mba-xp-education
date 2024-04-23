@@ -22,6 +22,7 @@ model Author {
   email     String
   telephone String
   Book      Book[]
+  Sale      Sale[]
 }
 
 model Book {
@@ -32,4 +33,16 @@ model Book {
   fkAuthorId Int
 
   author Author @relation(fields: [fkAuthorId], references: [authorId])
+  Sale   Sale[]
+}
+
+model Sale {
+  saleId     Int      @id @default(autoincrement())
+  value      Float
+  date       DateTime
+  fkAuthorId Int
+  fkBookId   Int
+
+  author Author @relation(fields: [fkAuthorId], references: [authorId])
+  book   Book   @relation(fields: [fkBookId], references: [bookId])
 }
