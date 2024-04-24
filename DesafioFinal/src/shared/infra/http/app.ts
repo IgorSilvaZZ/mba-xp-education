@@ -7,6 +7,7 @@ import { connectMongo } from '../mongoose';
 import { AppErrors } from '../../errors/AppErrors';
 
 import { authenticate } from './middlewares/ensureAuthenticate';
+import { limitAccess } from './middlewares/limitAccess';
 
 import { clientRouter } from './routes/client.routes';
 import { authorRouter } from './routes/author.routes';
@@ -20,6 +21,7 @@ app.use(express.json());
 connectMongo();
 
 app.use(authenticate);
+app.use(limitAccess);
 
 app.use('/client', clientRouter);
 app.use('/author', authorRouter);

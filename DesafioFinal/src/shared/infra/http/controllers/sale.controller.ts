@@ -33,7 +33,7 @@ export class SaleController {
   }
 
   async getClientById(req: Request, res: Response) {
-    const { clientId } = req.params;
+    let clientId = req.client.id !== 'admin_id' ? req.client.id : req.params.id;
 
     const sales = await this.listByClientIdUseCase.execute(Number(clientId));
 
@@ -59,13 +59,15 @@ export class SaleController {
   }
 
   async create(req: Request, res: Response) {
+    let fkClientId =
+      req.client.id !== 'admin_id' ? req.client.id : req.body.fkClientId;
+
     const bodySchema = z.object({
       date: z.string(),
-      fkClientId: z.number(),
       fkBookId: z.number(),
     });
 
-    const { date, fkClientId, fkBookId } = bodySchema.parse(req.body);
+    const { date, fkBookId } = bodySchema.parse(req.body);
 
     const sale = await this.createSaleUseCase.execute({
       date: new Date(date),

@@ -26,8 +26,6 @@ export const authenticate = async (
     authorizer: async (username: string, password: string, callback) => {
       const isValid = await validateUser(username, password);
 
-      console.log(isValid);
-
       if (isValid) {
         if (username !== 'admin') {
           const prismaClientRepository = new PrismaClientRepository();
@@ -35,6 +33,8 @@ export const authenticate = async (
           const client = await prismaClientRepository.findByEmail(username);
 
           req.client.id = Number(client?.clientId);
+        } else {
+          req.client.id = 'admin_id';
         }
 
         callback(null, true);

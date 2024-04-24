@@ -61,7 +61,7 @@ export class ClientController {
   }
 
   async update(req: Request, res: Response) {
-    const { id } = req.params;
+    let clientId = req.client.id !== 'admin_id' ? req.client.id : req.params.id;
 
     const bodySchema = z.object({
       name: z.string(),
@@ -84,7 +84,7 @@ export class ClientController {
     };
 
     const clientUpdated = await this.updateClientUseCase.execute(
-      Number(id),
+      Number(clientId),
       dataUpdated,
     );
 
