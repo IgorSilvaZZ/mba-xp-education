@@ -9,6 +9,7 @@ import { AppErrors } from '../../errors/AppErrors';
 import { clientRouter } from './routes/client.routes';
 import { authorRouter } from './routes/author.routes';
 import { bookRouter } from './routes/book.routes';
+import { saleRouter } from './routes/sale.routes';
 
 const app = express();
 
@@ -19,6 +20,7 @@ connectMongo();
 app.use('/client', clientRouter);
 app.use('/author', authorRouter);
 app.use('/book', bookRouter);
+app.use('/sale', saleRouter)
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof ZodError) {

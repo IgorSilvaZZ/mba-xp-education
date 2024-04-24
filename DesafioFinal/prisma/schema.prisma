@@ -14,6 +14,7 @@ model Client {
   password  String
   telephone String
   address   String
+  Sale      Sale[]
 }
 
 model Author {
@@ -22,7 +23,6 @@ model Author {
   email     String
   telephone String
   Book      Book[]
-  Sale      Sale[]
 }
 
 model Book {
@@ -40,9 +40,9 @@ model Sale {
   saleId     Int      @id @default(autoincrement())
   value      Float
   date       DateTime
-  fkAuthorId Int
+  fkClientId Int
   fkBookId   Int
 
-  author Author @relation(fields: [fkAuthorId], references: [authorId])
+  client Client @relation(fields: [fkClientId], references: [clientId])
   book   Book   @relation(fields: [fkBookId], references: [bookId])
 }
