@@ -33,7 +33,7 @@ export class SaleController {
   }
 
   async getClientById(req: Request, res: Response) {
-    let clientId = req.client.id !== 'admin_id' ? req.client.id : req.params.id;
+    let clientId = req.client.id !== 'admin_id' ? req.client.id : req.params.clientId;
 
     const sales = await this.listByClientIdUseCase.execute(Number(clientId));
 
