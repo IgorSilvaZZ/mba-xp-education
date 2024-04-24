@@ -6,6 +6,8 @@ import { connectMongo } from '../mongoose';
 
 import { AppErrors } from '../../errors/AppErrors';
 
+import { authenticate } from './middlewares/ensureAuthenticate';
+
 import { clientRouter } from './routes/client.routes';
 import { authorRouter } from './routes/author.routes';
 import { bookRouter } from './routes/book.routes';
@@ -17,10 +19,12 @@ app.use(express.json());
 
 connectMongo();
 
+app.use(authenticate);
+
 app.use('/client', clientRouter);
 app.use('/author', authorRouter);
 app.use('/book', bookRouter);
-app.use('/sale', saleRouter)
+app.use('/sale', saleRouter);
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   if (error instanceof ZodError) {
