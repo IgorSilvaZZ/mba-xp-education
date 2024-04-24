@@ -11,7 +11,7 @@ export class CreateBookInfoUseCase {
     private bookRepository: BookRepository,
   ) {}
 
-  async execute({ bookId, description, publishing }: CreateBookInfoDTO) {
+  async execute({ bookId, description, pages, publishing }: CreateBookInfoDTO) {
     const bookExists = await this.bookRepository.findById(bookId);
 
     if (!bookExists) {
@@ -21,6 +21,7 @@ export class CreateBookInfoUseCase {
     const bookInfo = await this.bookInfoRepository.create({
       bookId,
       description,
+      pages,
       publishing,
     });
 

@@ -11,7 +11,7 @@ export class CreateBookUseCase {
     private authorRepository: AuthorRepository,
   ) {}
 
-  async execute({ name, value, fkAuthorId }: CreateBookDTO) {
+  async execute({ name, value, fkAuthorId, stock }: CreateBookDTO) {
     const authorExits = await this.authorRepository.findById(fkAuthorId);
 
     if (!authorExits) {
@@ -39,6 +39,7 @@ export class CreateBookUseCase {
         name,
         value,
         fkAuthorId,
+        stock: stock ?? 1,
       });
 
       return book;

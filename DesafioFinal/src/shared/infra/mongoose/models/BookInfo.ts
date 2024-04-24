@@ -13,6 +13,7 @@ const EvaluationsSchema = new Schema({
 const BookInfoSchema = new Schema({
   bookId: { type: Number, required: true },
   description: { type: String, required: true },
+  pages: { type: Number, required: true },
   publishing: { type: String, required: true },
   evaluations: [EvaluationsSchema],
 });

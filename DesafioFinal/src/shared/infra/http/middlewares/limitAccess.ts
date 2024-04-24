@@ -8,8 +8,6 @@ export const limitAccess = (
 ) => {
   const clientId = req.client.id;
 
-  console.log(req.originalUrl);
-
   if (clientId !== 'admin_id') {
     if (
       (req.method === 'PUT' && req.originalUrl.startsWith('/client/')) ||

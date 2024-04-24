@@ -55,7 +55,7 @@ export class PrismaBookRepository implements BookRepository {
     const book = await prisma.book.create({
       data: {
         ...data,
-        stock: 1,
+        stock: data.stock ?? 1,
       },
     });
 

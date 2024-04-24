@@ -63,6 +63,7 @@ export class BookController {
       name,
       value,
       fkAuthorId,
+      stock: req.body.stock ?? 1,
     });
 
     return res.status(201).json(book);
@@ -88,14 +89,18 @@ export class BookController {
     const bodySchema = z.object({
       bookId: z.number(),
       description: z.string(),
+      pages: z.number(),
       publishing: z.string(),
     });
 
-    const { bookId, description, publishing } = bodySchema.parse(req.body);
+    const { bookId, description, pages, publishing } = bodySchema.parse(
+      req.body,
+    );
 
     const bookInfo = await this.createBookInfoUseCase.execute({
       bookId,
       description,
+      pages,
       publishing,
     });
 
