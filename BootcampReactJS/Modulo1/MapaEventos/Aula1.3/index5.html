@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aula 1.3 - Mouse Event - Ordem de execução</title>
+  </head>
+  <body>
+    <input type="button" id="input" value="Clique aqui" />
+
+    <textarea id="textarea"></textarea>
+
+    <input type="button" onclick="textarea.value=''" value="Clear" />
+  </body>
+
+  <script>
+    let input = document.getElementById("input");
+
+    input.addEventListener("click", log);
+    input.addEventListener("mousedown", log);
+    input.addEventListener("mouseup", log);
+    input.addEventListener("contextmenu", log);
+    input.addEventListener("dblclick", log);
+
+    function log(event) {
+      document.getElementById("textarea").value += event.type + "\n";
+    }
+  </script>
+</html>

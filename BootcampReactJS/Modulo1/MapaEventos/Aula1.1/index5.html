@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aula 2 - Propagação de Eventos - Bubbling</title>
+    <style>
+      div,
+      p,
+      a {
+        padding: 15px 30px;
+        display: block;
+        border: 2px solid #000;
+        background: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      DIV
+      <p>
+        P
+        <a href="#">A</a>
+      </p>
+    </div>
+  </body>
+
+  <script>
+    let elements = document.querySelectorAll("div, p, a");
+
+    function showTagName() {
+      alert(`Captura: ${this.tagName}`);
+    }
+
+    for (let element of elements) {
+      // Por padrão ele tem o borbulhamento (bubbling habilitado por padrão)
+      // Colocando o false no terceiro parametro ele desabilita o bubbling
+      element.addEventListener("click", showTagName, true);
+    }
+  </script>
+</html>
