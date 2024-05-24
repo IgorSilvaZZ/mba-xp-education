@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,7 +12,7 @@
       <h1>Make Up Catalog</h1>
     </header>
     <main>
-      <form class="catalog-control">
+      <form class="catalog-control" onsubmit="return handleSubmit(event)">
         <div class="form-control">
           <label for="filter-name">Nome:</label>
           <input type="text" id="filter-name" />
@@ -32,9 +32,9 @@
         <div class="form-control">
           <label for="sort"></label>
           <select id="sort-type">
-            <option value="best-rating">Melhor Avaliados</option>
-            <option value="price-less">Menores Preços</option>
-            <option value="price-greater">Maiores Preços</option>
+            <option value="rating_greater_than">Melhor Avaliados</option>
+            <option value="price_less_than">Menores Preços</option>
+            <option value="price_greater_than">Maiores Preços</option>
             <option value="name-az">A-Z</option>
             <option value="name-za">Z-A</option>
           </select>
