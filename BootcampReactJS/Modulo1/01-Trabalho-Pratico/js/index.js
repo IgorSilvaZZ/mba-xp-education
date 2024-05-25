@@ -2,7 +2,7 @@ const BASEURL = "http://makeup-api.herokuapp.com/api/v1/products.json";
 
 const typesSorts = {
   rating_greater_than: 4,
-  price_greater_than: 25,
+  price_greater_than: 50,
   price_less_than: 20,
 };
 
@@ -165,9 +165,9 @@ function loadProducts(products) {
       product.product_type
     }" tabindex="508">
         <figure class="product-figure">
-            <img src="${product.image_link}" width="215" height="215" alt="${
-      product.name
-    }" onerror="javascript:this.src='img/unavailable.png'">
+            <img src="img/unavailable.png" width="215" height="215" alt="${
+              product.name
+            }" onerror="javascript:this.src='img/unavailable.png'">
         </figure>
         <section class="product-description">
             <h1 class="product-name">${product.name ?? ""}</h1>
