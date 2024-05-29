@@ -14,6 +14,11 @@ const carModelAll = {
     Chevrolet: ["Onix", "Tracker", "Corsa"],
   },
   [Symbol.iterator]() {
+    const brands = Object.values(this.allModels);
+
+    let currentModelIndex = 0;
+    let currentBrandIndex = 0;
+
     return {
       next() {
         return {
