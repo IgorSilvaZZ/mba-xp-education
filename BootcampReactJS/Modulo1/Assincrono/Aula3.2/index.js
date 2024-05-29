@@ -42,3 +42,78 @@ Promise.all([
   .then((results) => results.length)
   .then((size) => console.info(size))
   .catch((error) => console.error(error));
+
+// EXEMPLO Promise.race - Corrida de promises (A que retornar primeiro)
+
+const promise2 = Promise.race([
+  new Promise((resolve) => setTimeout(resolve, 2000, "P2 - Success")),
+  new Promise((resolve, reject) => setTimeout(reject, 3000, "P2 - Error")),
+]);
+
+promise2.then((result) => console.log(result));
+promise2.catch((error) => console.error(error));
+
+// EXEMPLO Promise.race - Varias promises com rejeição
+
+const promise3 = Promise.race([
+  new Promise((resolve) => setTimeout(resolve, 3000, "P3 - Success")),
+  new Promise((resolve, reject) => setTimeout(reject, 2000, "P3 - Error")),
+  new Promise((resolve) => setTimeout(resolve, 4000, "P3 - Error")),
+]);
+
+promise3.then((result) => console.log(result));
+promise3.catch((error) => console.error(error));
+
+// EXEMPLO Promise.race - Exemplo pratico
+
+function showStatus() {
+  console.log("Carregando....");
+}
+
+function getCarInfo(car) {
+  return new Promise((resolve, reject) => {
+    setTimeout(
+      () => resolve(`Car details ${car}`),
+      Math.floor(600 * Math.random)
+    );
+  });
+}
+
+function timeout(time, result) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => resolve(result), time);
+  });
+}
+
+function showCarInfo(car) {
+  return getCarInfo(car).then((info) => {
+    console.log(`Car Info ${info}`);
+    return true;
+  });
+}
+
+Promise.race([showCarInfo("Palio"), timeout(300)]).then((displayed) => {
+  if (!displayed) showStatus();
+});
+
+// EXEMPLO Promise.allSettled
+
+const promise4 = Promise.allSettled([
+  new Promise((resolve) => setTimeout(resolve, 3000, "P4 - Success")),
+  new Promise((resolve, reject) => setTimeout(reject, 2000, "P4 - Error")),
+  new Promise((resolve) => setTimeout(resolve, 4000, "P4 - Error")),
+]);
+
+promise4.then((result) => console.log(result));
+promise4.catch((error) => console.error(error));
+
+// Exemplo Promise.any - Retorna a primeira promise fullfilled/realizada/resolvida
+
+const promise5 = Promise.any([
+  new Promise((resolve, reject) => setTimeout(reject, 2000, "P5 - Error")),
+  new Promise((resolve) => setTimeout(resolve, 3000, "P5 - Success")),
+  new Promise((resolve) => setTimeout(resolve, 4000, "P5 - Error")),
+]);
+
+promise5.then((result) => console.log(result));
+promise5.catch((error) => console.error(error));
