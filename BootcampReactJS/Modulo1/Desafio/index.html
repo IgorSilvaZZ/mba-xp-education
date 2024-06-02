@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Covid-19</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <section class="main">
+        <img
+          src="./images/covid3d.png"
+          alt="Imagem do vírus em 3D"
+          class="imagem__virus"
+        />
+        <div class="header-info">
+          <h1>Situação da COVID-19</h1>
+          <div class="form">
+            <div class="form-item">
+              <label for="filter-date">Data:</label>
+              <input type="date" id="filter-date" />
+            </div>
+            <div class="form-item">
+              <label for="filter-country">Pais:</label>
+              <select id="filter-country">
+                <option selected value="BRA">Brasil</option>
+                <option value="USA">Estados Unidos</option>
+              </select>
+            </div>
+            <button onclick="handleSubmit()">Pesquisar</button>
+          </div>
+          <a href="https://github.com/IgorSilvaZZ">
+            <img src="./images/logoXP.png" alt="Logo da XP" class="logo__xp" />
+            Por: Igor Silva</a
+          >
+        </div>
+      </section>
+      <img
+        class="imagem__grafico"
+        id="imagem__grafico"
+        src="./images/covid.png"
+        alt="Imagem ilustrativa do gráfico da covid"
+      />
+      <div id="chart_info">
+        <canvas id="chart_covid" width="150"></canvas>
+      </div>
+    </header>
+  </body>
+
+  <script src="./js/index.js"></script>
+</html>
