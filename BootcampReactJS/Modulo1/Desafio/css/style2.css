@@ -16,13 +16,14 @@ body {
 
 .window-main {
   display: flex;
+  flex-direction: column;
 
   height: 90vh;
   width: 80vw;
 
   border-radius: 10px;
 
-  background-color: #ffffff;
+  background-color: #faf7f7;
 
   -webkit-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
@@ -33,6 +34,7 @@ header {
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 5px 0px;
 
   height: 30px;
   width: 100%;
@@ -46,7 +48,101 @@ header {
   height: 15px;
   width: 15px;
 
+  margin-left: 5px;
+
   border-radius: 50%;
 
   cursor: pointer;
+}
+
+.section-form {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  height: 80px;
+
+  margin: 0px 10px;
+}
+
+.form-items {
+  display: flex;
+  align-items: center;
+
+  width: 700px;
+}
+
+.form-item label {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.form-item input,
+select {
+  width: 200px;
+  padding: 5px;
+
+  font-size: 13px;
+
+  border-radius: 10px;
+
+  border: 1px solid #bdc3c7;
+  outline: none;
+}
+
+.section-form button {
+  padding: 8px;
+
+  width: 150px;
+
+  border-radius: 8px;
+
+  border: none;
+  outline: none;
+
+  background-color: #3498db;
+  color: white;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: background 0.2s;
+}
+
+.section-form button:hover {
+  background-color: #2980b9;
+}
+
+.section-cards {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+
+  height: 150px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  height: 120px;
+  width: 180px;
+
+  border-radius: 10px;
+
+  background-color: white;
+  border: 2px solid #3498db;
+}
+
+.card p {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.card span {
+  font-size: 12px;
+  font-weight: 400;
 }
