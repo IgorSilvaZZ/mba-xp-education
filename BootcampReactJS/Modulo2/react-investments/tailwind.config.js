@@ -12,6 +12,9 @@ export default {
         background: "#6c56f9",
         backgroundMain: "#1c1c1e",
       },
+      flex: {
+        "content-scroll": "0 0 auto",
+      },
     },
   },
   plugins: [],
