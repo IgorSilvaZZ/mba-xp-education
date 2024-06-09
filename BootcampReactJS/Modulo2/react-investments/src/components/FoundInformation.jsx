@@ -6,7 +6,7 @@ export const FoundInformation = () => {
       <span className='text-base text-gray-600 font-semibold'>
         Fundo de Ações
       </span>
-      <div className='flex flex-col gap-4 h-[500px] overflow-y-auto'>
+      <div className='flex flex-col gap-4 h-[480px] max-w-[500px] overflow-y-auto'>
         <InfoCard />
         <InfoCard />
         <InfoCard />

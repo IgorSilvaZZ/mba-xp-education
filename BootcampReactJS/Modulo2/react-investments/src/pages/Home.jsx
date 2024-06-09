@@ -22,7 +22,10 @@ export default function Home() {
               <img src={investmentsIcon} alt='Investiment Icon' />
             </div>
           </section>
-          <div className='h-48 w-full border-solid flex gap-4 flex-nowrap overflow-x-auto box-border flex-content-scroll'>
+          <div className='h-48 w-full border-solid flex gap-4 overflow-x-auto box-border'>
+            <Card />
+            <Card />
+            <Card />
             <Card />
             <Card />
             <Card />

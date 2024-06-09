@@ -5,3 +5,13 @@
 * {
   font-family: "Poppins", sans-serif;
 }
+
+* ::-webkit-scrollbar {
+  width: 8px;
+  background: #171717;
+}
+
+* ::-webkit-scrollbar-thumb {
+  background: #5f27cd;
+  border-radius: 5px;
+}
