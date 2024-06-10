@@ -53,6 +53,7 @@ export default function ReactCountriesPage() {
             inputValue={countryFilter}
           />
 
+          {/* Exemplo de composition */}
           <Countries>
             <h2>{filteredCountries.length} paíse(s)</h2>
             <h3>{visitedCountries.length} país(es) visitados</h3>
