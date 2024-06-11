@@ -9,10 +9,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "json-server": "^1.0.0-beta.1"
-  },
   "dependencies": {
+    "json-server": "^0.17.4",
     "uuid": "^10.0.0"
   }
 }
