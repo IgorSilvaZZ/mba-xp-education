@@ -1,14 +1,19 @@
 import { useState, useEffect } from "react";
 
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+
 import { Button } from "../components/Button";
 import { FlashCard } from "../components/FlashCard";
 import { FlashCards } from "../components/FlashCards";
 import { Header } from "../components/Header";
 import { Main } from "../components/Main";
 import { RadioButton } from "../components/RadioButton";
+import { Loading } from "../components/Loading";
+import { Error } from "../components/Error";
 
 import { helperShuffleArray } from "../helpers/arrayHelpers";
 import { apiGetAllFlashCards } from "../lib/api";
+import { FlashCardItem } from "../components/FlashCardItem";
 
 export default function FlashCardsPage() {
   // Back-End
@@ -20,6 +25,7 @@ export default function FlashCardsPage() {
   const [showTitles, setShowTitles] = useState(true);
 
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   function handleShuffle() {
     const shuffledCards = helperShuffleArray(studyCards);
@@ -59,6 +65,10 @@ export default function FlashCardsPage() {
     setStudyCards(updatedCards);
   }
 
+  function handleDeleteFlashCard(flashCardId) {
+    console.log(flashCardId);
+  }
+
   useEffect(() => {
     setStudyCards(allCards.map((card) => ({ ...card, showTitle: true })));
   }, [allCards]);
@@ -83,53 +93,100 @@ export default function FlashCardsPage() {
     */
 
     (async () => {
-      const resultAllCards = await apiGetAllFlashCards();
+      try {
+        const resultAllCards = await apiGetAllFlashCards();
 
-      setLoading(false);
-      setAllCards(resultAllCards);
+        setAllCards(resultAllCards);
+
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
+      } catch (error) {
+        setError(error);
+      }
     })();
   }, []);
+
+  let mainJsx = (
+    <div className='flex justify-center my-4'>
+      <Loading />
+    </div>
+  );
+
+  if (error) {
+    mainJsx = <Error>{error}</Error>;
+  }
+
+  if (!loading) {
+    mainJsx = (
+      <>
+        <Tabs>
+          <TabList>
+            <Tab>Listagem</Tab>
+            <Tab>Cadastro</Tab>
+            <Tab>Estudo</Tab>
+          </TabList>
+
+          <TabPanel>
+            {allCards.map((flashCard) => (
+              <FlashCardItem
+                key={flashCard.id}
+                onDelete={handleDeleteFlashCard}
+              >
+                {flashCard}
+              </FlashCardItem>
+            ))}
+          </TabPanel>
+
+          <TabPanel>Cadastro</TabPanel>
+
+          <TabPanel>
+            <div className='text-center mb-4'>
+              <Button onButtonClick={handleShuffle}>Embaralhar Cards</Button>
+            </div>
+
+            <div className='flex item-center justify-center space-x-4 m-4'>
+              <RadioButton
+                id='radioButtonShowTitle'
+                name='showInfo'
+                buttonChecked={showTitles}
+                onButtonClick={handleRadioShowTitleClick}
+              >
+                Mostrar Titulo
+              </RadioButton>
+              <RadioButton
+                id='radioButtonShowDescription'
+                name='showInfo'
+                buttonChecked={!showTitles}
+                onButtonClick={handleRadioShowDescriptionClick}
+              >
+                Mostrar Descrição
+              </RadioButton>
+            </div>
+
+            <FlashCards>
+              {studyCards.map(({ id, title, description, showTitle }) => (
+                <FlashCard
+                  key={id}
+                  id={id}
+                  title={title}
+                  description={description}
+                  showFlashCardTitle={showTitle}
+                  onToggleFlashCard={handleToggleFlashCard}
+                />
+              ))}
+            </FlashCards>
+          </TabPanel>
+        </Tabs>
+      </>
+    );
+  }
 
   return (
     <>
       <Header>React Flash Cards V1</Header>
-      <Main>
-        <div className='text-center mb-4'>
-          <Button onButtonClick={handleShuffle}>Embaralhar Cards</Button>
-        </div>
 
-        <div className='flex item-center justify-center space-x-4 m-4'>
-          <RadioButton
-            id='radioButtonShowTitle'
-            name='showInfo'
-            buttonChecked={showTitles}
-            onButtonClick={handleRadioShowTitleClick}
-          >
-            Mostrar Titulo
-          </RadioButton>
-          <RadioButton
-            id='radioButtonShowDescription'
-            name='showInfo'
-            buttonChecked={!showTitles}
-            onButtonClick={handleRadioShowDescriptionClick}
-          >
-            Mostrar Descrição
-          </RadioButton>
-        </div>
-
-        <FlashCards>
-          {studyCards.map(({ id, title, description, showTitle }) => (
-            <FlashCard
-              key={id}
-              id={id}
-              title={title}
-              description={description}
-              showFlashCardTitle={showTitle}
-              onToggleFlashCard={handleToggleFlashCard}
-            />
-          ))}
-        </FlashCards>
-      </Main>
+      <Main>{mainJsx}</Main>
     </>
   );
 }
