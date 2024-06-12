@@ -5,3 +5,13 @@
 * {
   font-family: "JetBrains Mono", monospace;
 }
+
+* ::-webkit-scrollbar {
+  width: 8px;
+  background: #171717;
+}
+
+* ::-webkit-scrollbar-thumb {
+  background: rgb(63 63 70);
+  border-radius: 5px;
+}

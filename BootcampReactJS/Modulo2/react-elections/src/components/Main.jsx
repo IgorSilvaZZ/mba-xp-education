@@ -1,3 +1,4 @@
+import { Candidates } from "./Candidates";
 import { CardsInfos } from "./CardsInfos";
 
 export const Main = () => {
@@ -19,8 +20,9 @@ export const Main = () => {
         </select>
       </div>
 
-      <div className='flex gap-10 w-full flex-1'>
+      <div className='flex gap-10 w-full h-full flex-1'>
         <CardsInfos />
+        <Candidates />
       </div>
     </div>
   );
