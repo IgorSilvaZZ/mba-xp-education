@@ -32,10 +32,31 @@ export const Main = () => {
 
         return {
           ...election,
-          candidate,
+          candidateElection: false,
+          candidate: {
+            ...candidate,
+            percent: 0,
+          },
         };
       })
       .sort((a, b) => b.votes - a.votes);
+
+    const totalVotes = infoElection.reduce(
+      (acc, candidate) => acc + candidate.votes,
+      0
+    );
+
+    let maxVotes = 0;
+
+    for (let info of infoElection) {
+      const percent = (info.votes / totalVotes) * 100;
+      info.candidate.percent = percent.toFixed(2);
+
+      if (info.votes > maxVotes) {
+        maxVotes = info.votes;
+        info.candidateElection = true;
+      }
+    }
 
     setElectionsInfo(infoElection);
   }
@@ -119,7 +140,9 @@ export const Main = () => {
               key={election.id}
               nameCandidate={election.candidate.name}
               userNameCandidate={election.candidate.username}
+              percent={election.candidate.percent}
               votes={election.votes}
+              candidateElection={election.candidateElection}
             />
           ))}
         </Candidates>
