@@ -52,6 +52,7 @@ export const Main = () => {
 
   useEffect(() => {
     (async () => {
+      // Colocar Promise.all nessas duas chamadas
       const { data: dataCities } = await api.get("/cities");
 
       const { data: dataCandidates } = await api.get("/candidates");
