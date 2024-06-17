@@ -1,5 +1,7 @@
 export const Button = ({
   children: description = "Descrição do Botão",
+  color = "bg-gray-200",
+  type = "button",
   onButtonClick = null,
 }) => {
   function handleButtonClick() {
@@ -11,7 +13,8 @@ export const Button = ({
   return (
     <>
       <button
-        className='bg-gray-200 p-2 m-1 rounded-md'
+        type={type}
+        className={`${color} p-2 m-1 rounded-md`}
         onClick={handleButtonClick}
       >
         {description}

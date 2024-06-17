@@ -14,6 +14,8 @@ export function TextArea({
     }
   }
 
+  const currentCharacterCount = textAreaValue.length;
+
   return (
     <>
       <div className='flex flex-col my-4'>
@@ -29,6 +31,12 @@ export function TextArea({
           value={textAreaValue}
           onChange={handleTextAreaChange}
         />
+
+        <div className='text-right mr-2'>
+          <span>
+            {currentCharacterCount} / {maxLength}
+          </span>
+        </div>
       </div>
     </>
   );

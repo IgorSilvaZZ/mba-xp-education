@@ -15,6 +15,7 @@ import { helperShuffleArray } from "../helpers/arrayHelpers";
 import { apiGetAllFlashCards } from "../lib/api";
 import { FlashCardItem } from "../components/FlashCardItem";
 import { FlashCardForm } from "../components/FlashCardForm";
+import { getNewId } from "../lib/idService";
 
 export default function FlashCardsPage() {
   // Back-End
@@ -86,6 +87,14 @@ export default function FlashCardsPage() {
   function handleNewFlashCard() {
     setCreateMode(true);
     setSelectedFlashCard(null);
+  }
+
+  function handlePersist(title, description) {
+    if (createMode) {
+      setAllCards([...allCards, { id: getNewId(), title, description }]);
+    } else {
+      console.log("Edição");
+    }
   }
 
   useEffect(() => {
@@ -164,7 +173,9 @@ export default function FlashCardsPage() {
                 Novo flash card
               </Button>
             </div>
-            <FlashCardForm createMode={createMode} />
+            <FlashCardForm createMode={createMode} onPersist={handlePersist}>
+              {selectedFlashCard}
+            </FlashCardForm>
           </TabPanel>
 
           <TabPanel>
