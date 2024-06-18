@@ -10,11 +10,16 @@ import { Main } from "../components/Main";
 import { RadioButton } from "../components/RadioButton";
 import { Loading } from "../components/Loading";
 import { Error } from "../components/Error";
-
-import { helperShuffleArray } from "../helpers/arrayHelpers";
-import { apiGetAllFlashCards } from "../lib/api";
 import { FlashCardItem } from "../components/FlashCardItem";
 import { FlashCardForm } from "../components/FlashCardForm";
+
+import { helperShuffleArray } from "../helpers/arrayHelpers";
+import {
+  apiDeleteFlashCard,
+  apiCreateFlashCard,
+  apiGetAllFlashCards,
+  apiUpdateFlashCard,
+} from "../lib/api";
 import { getNewId } from "../lib/idService";
 
 export default function FlashCardsPage() {
@@ -76,8 +81,17 @@ export default function FlashCardsPage() {
     setSelectedFlashCard(card);
   }
 
-  function handleDeleteFlashCard(flashCardId) {
-    setAllCards(allCards.filter((card) => card.id !== flashCardId));
+  async function handleDeleteFlashCard(flashCardId) {
+    try {
+      await apiDeleteFlashCard(flashCardId);
+
+      // Front-End
+      setAllCards(allCards.filter((card) => card.id !== flashCardId));
+
+      setError("");
+    } catch (error) {
+      setError(error.message);
+    }
   }
 
   function handleTabSelected(tabIndex) {
@@ -89,11 +103,44 @@ export default function FlashCardsPage() {
     setSelectedFlashCard(null);
   }
 
-  function handlePersist(title, description) {
+  async function handlePersist(title, description) {
     if (createMode) {
-      setAllCards([...allCards, { id: getNewId(), title, description }]);
+      try {
+        const newFlashCard = await apiCreateFlashCard(title, description);
+
+        // Front-End
+        setAllCards([...allCards, newFlashCard]);
+
+        setError("");
+      } catch (error) {
+        setError(error.message);
+      }
     } else {
-      console.log("Edição");
+      try {
+        await apiUpdateFlashCard(
+          selectedFlashCard.id,
+          title,
+          description
+        );
+
+        // Front-End
+        setAllCards(
+          allCards.map((card) => {
+            if (card.id === selectedFlashCard.id) {
+              return { ...card, title, description };
+            }
+
+            return card;
+          })
+        );
+
+        setSelectedFlashCard(null);
+        setCreateMode(true);
+
+        setError("");
+      } catch (error) {
+        setError(error.message);
+      }
     }
   }
 
@@ -145,7 +192,7 @@ export default function FlashCardsPage() {
     mainJsx = <Error>{error}</Error>;
   }
 
-  if (!loading) {
+  if (!loading && !error) {
     mainJsx = (
       <>
         <Tabs selectedIndex={selectedTab} onSelect={handleTabSelected}>
