@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 import { useEffect, useState } from "react";
 
 import { Candidates } from "./Candidates";
@@ -25,37 +23,30 @@ export const Main = () => {
     });
 
     const infoElection = dataElection
-      .map((election) => {
+      .sort((a, b) => b.votes - a.votes)
+      .map((election, index) => {
         const candidate = allCandidates.find(
           (candidateItem) => candidateItem.id === election.candidateId
         );
 
         return {
           ...election,
-          candidateElection: false,
           candidate: {
+            candidateElection: index === 0,
             ...candidate,
             percent: 0,
           },
         };
-      })
-      .sort((a, b) => b.votes - a.votes);
+      });
 
     const totalVotes = infoElection.reduce(
       (acc, candidate) => acc + candidate.votes,
       0
     );
 
-    let maxVotes = 0;
-
     for (let info of infoElection) {
       const percent = (info.votes / totalVotes) * 100;
       info.candidate.percent = percent.toFixed(2);
-
-      if (info.votes > maxVotes) {
-        maxVotes = info.votes;
-        info.candidateElection = true;
-      }
     }
 
     setElectionsInfo(infoElection);
@@ -136,14 +127,7 @@ export const Main = () => {
 
         <Candidates>
           {electionsInfo.map((election) => (
-            <CandidateInfo
-              key={election.id}
-              nameCandidate={election.candidate.name}
-              userNameCandidate={election.candidate.username}
-              percent={election.candidate.percent}
-              votes={election.votes}
-              candidateElection={election.candidateElection}
-            />
+            <CandidateInfo key={election.id} electionInfo={election} />
           ))}
         </Candidates>
       </div>

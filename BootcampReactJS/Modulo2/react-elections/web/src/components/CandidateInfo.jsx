@@ -1,16 +1,13 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 
 import { formattedNumber } from "../utils/formattedNumber";
 
-export const CandidateInfo = ({
-  nameCandidate,
-  userNameCandidate,
-  votes,
-  percent,
-  candidateElection,
-}) => {
-  const candidateImage = `../../public/${userNameCandidate}.png`;
+export const CandidateInfo = ({ electionInfo }) => {
+  const { percent, votes, candidate } = electionInfo;
+
+  const { name, username, candidateElection } = candidate;
+
+  const candidateImage = `../../public/${username}.png`;
 
   const colorElected = candidateElection ? "text-green-500" : "text-yellow-500";
 
@@ -26,14 +23,14 @@ export const CandidateInfo = ({
         </div>
 
         <div className='flex flex-col'>
-          <p className='text-white text-lg'>{nameCandidate}</p>
+          <p className='text-white text-lg'>{name}</p>
           <span className='text-sm font-semibold text-gray-400 w-44'>
             {formattedNumber(votes)} voto(s)
           </span>
         </div>
       </div>
       <span className='text-white text-sm'>{percent}%</span>
-      <span className={`text-white w-32 text-center ${colorElected}`}>
+      <span className={`w-32 text-center ${colorElected}`}>
         {candidateElection ? "Eleito" : "Não Eleito"}
       </span>
     </div>
