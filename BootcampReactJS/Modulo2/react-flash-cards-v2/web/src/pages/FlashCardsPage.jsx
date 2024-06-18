@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
 
 import { Button } from "../components/Button";
 import { FlashCard } from "../components/FlashCard";
@@ -20,7 +21,6 @@ import {
   apiGetAllFlashCards,
   apiUpdateFlashCard,
 } from "../lib/api";
-import { getNewId } from "../lib/idService";
 
 export default function FlashCardsPage() {
   // Back-End
@@ -117,11 +117,7 @@ export default function FlashCardsPage() {
       }
     } else {
       try {
-        await apiUpdateFlashCard(
-          selectedFlashCard.id,
-          title,
-          description
-        );
+        await apiUpdateFlashCard(selectedFlashCard.id, title, description);
 
         // Front-End
         setAllCards(

@@ -23,7 +23,7 @@ export const FlashCardItem = ({
   }
 
   return (
-    <>
+    <div className='border p-2 m-2'>
       <ul className='flex flex-col space-y-4'>
         <li>
           <strong>Título:</strong>
@@ -35,7 +35,7 @@ export const FlashCardItem = ({
         </li>
       </ul>
 
-      <div className='mt-4 flex items-center justify-end space-y-4'>
+      <div className='mt-4 flex items-center justify-end'>
         <EditIcon
           className='cursor-pointer'
           onClick={handleEditIconClick}
@@ -47,6 +47,6 @@ export const FlashCardItem = ({
           size={24}
         />
       </div>
-    </>
+    </div>
   );
 };
