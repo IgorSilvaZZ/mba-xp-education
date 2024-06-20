@@ -5,7 +5,7 @@ import Calendar from "./pages/Calendar";
 
 const themeProvider = createTheme({
   palette: {
-    mode: "dark",
+    mode: "light",
   },
 });
 
