@@ -8,8 +8,10 @@ export async function getCalendars(): Promise<ICalendar[]> {
   return data;
 }
 
-export async function getEvents(): Promise<IEvent[]> {
-  const response = await fetch("http://localhost:8080/events");
+export async function getEvents(from: string, to: string): Promise<IEvent[]> {
+  const response = await fetch(
+    `http://localhost:8080/events?date_gte${from}&date_lte=${to}&_sort=date,time`
+  );
 
   const data = await response.json();
 
