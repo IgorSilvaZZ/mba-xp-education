@@ -25,6 +25,8 @@ import { monthsSelected, yearsSelected } from "../utils/getMonthsYears";
 
 import { api } from "../lib/axios";
 
+import financesImage from "../assets/finances-image.png";
+
 interface ParamsHistory {
   year?: string;
   month?: string;
@@ -40,34 +42,66 @@ interface IExpenses {
 }
 
 export default function Main() {
-  /* const { year, month } = useParams<ParamsHistory>(); */
+  const { year, month } = useParams<ParamsHistory>();
 
   const history = useHistory();
 
-  const [yearSelected, setYearSelected] = useState<string>("2020");
-  const [monthSelected, setMonthSelected] = useState<string>("01");
+  const [yearSelected, setYearSelected] = useState<string>(year ?? "2020");
+  const [monthSelected, setMonthSelected] = useState<string>(month ?? "01");
+  const [totalExpenses, setTotalExpenses] = useState<number>(0);
 
-  function handleSubmit() {
+  const [allExpenses, setAllExpenses] = useState<IExpenses[]>([]);
+
+  async function handleSubmit() {
     history.push(`/despesas/${yearSelected}-${monthSelected}`);
+
+    const expenses = await getExpenses(
+      year ?? yearSelected,
+      month ?? monthSelected
+    );
+
+    setAllExpenses(expenses);
+  }
+
+  function handleChangeYear(newYear: string) {
+    setYearSelected(newYear);
+  }
+
+  function handleChangeMonth(newMonth: string) {
+    setMonthSelected(newMonth);
   }
 
   async function getExpenses(yearFilter: string, monthFilter: string) {
-    const { data } = await api.get(`/despesas`, {
+    const { data } = await api.get<IExpenses[]>(`/despesas`, {
       params: {
         mes: `${yearFilter}-${monthFilter}`,
       },
     });
 
-    return data;
+    const expensesTotal = data.reduce(
+      (acc, expenseItem) => acc + expenseItem.valor,
+      0
+    );
+
+    const sortableDayExpenses = data.sort(
+      (a, b) => Number(a.dia) - Number(b.dia)
+    );
+
+    setTotalExpenses(expensesTotal);
+
+    return sortableDayExpenses;
   }
 
   useEffect(() => {
     (async () => {
-      const expensesYearMonth = await getExpenses(yearSelected, monthSelected);
+      const expensesYearMonth = await getExpenses(
+        year ?? yearSelected,
+        month ?? monthSelected
+      );
 
-      console.log(expensesYearMonth);
+      setAllExpenses(expensesYearMonth);
     })();
-  }, [yearSelected, monthSelected]);
+  }, []);
 
   return (
     <Grid container sx={{ height: "100vh", width: "100vw" }}>
@@ -101,7 +135,11 @@ export default function Main() {
             mt='25px'
             gap={3}
           >
-            <SelectInput label='Ano' selectValue={yearSelected}>
+            <SelectInput
+              label='Ano'
+              selectValue={yearSelected}
+              onSelectChange={handleChangeYear}
+            >
               {yearsSelected.map((year, index) => (
                 <MenuItem key={index} value={year.value}>
                   {year.label}
@@ -109,7 +147,11 @@ export default function Main() {
               ))}
             </SelectInput>
 
-            <SelectInput label='Mês' selectValue={monthSelected}>
+            <SelectInput
+              label='Mês'
+              selectValue={monthSelected}
+              onSelectChange={handleChangeMonth}
+            >
               {monthsSelected.map((month, index) => (
                 <MenuItem key={index} value={month.value}>
                   {month.label}
@@ -120,96 +162,83 @@ export default function Main() {
             <Button
               variant='contained'
               sx={{ backgroundColor: "#9b59b6", borderRadius: "15px" }}
+              onClick={handleSubmit}
             >
               Pesquisar
             </Button>
           </Grid>
 
-          <Grid item display='flex' alignItems='center' height='50px'>
-            <Typography>
-              Total das Despesas:{" "}
-              <strong style={{ color: "rgb(139 92 246)" }}>R$ 500,00</strong>
-            </Typography>
-          </Grid>
-
-          <Box
-            sx={{
-              display: "flex",
-              borderRadius: "10px",
-              mt: "12px",
-            }}
-          >
-            <TableContainer component={Paper} sx={{ height: "100%" }}>
-              <Table aria-label='simple table'>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Despesa</TableCell>
-                    <TableCell>Categoria</TableCell>
-                    <TableCell>Dia</TableCell>
-                    <TableCell>Valor (R$)</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell>Restaurante</TableCell>
-                    <TableCell>Alimentacao</TableCell>
-                    <TableCell>01</TableCell>
-                    <TableCell>38,25</TableCell>
-                  </TableRow>
-                  <TableRow
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell>Restaurante</TableCell>
-                    <TableCell>Alimentacao</TableCell>
-                    <TableCell>01</TableCell>
-                    <TableCell>38,25</TableCell>
-                  </TableRow>
-                  <TableRow
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell>Restaurante</TableCell>
-                    <TableCell>Alimentacao</TableCell>
-                    <TableCell>01</TableCell>
-                    <TableCell>38,25</TableCell>
-                  </TableRow>
-                  <TableRow
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell>Restaurante</TableCell>
-                    <TableCell>Alimentacao</TableCell>
-                    <TableCell>01</TableCell>
-                    <TableCell>38,25</TableCell>
-                  </TableRow>
-                  <TableRow
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell>Restaurante</TableCell>
-                    <TableCell>Alimentacao</TableCell>
-                    <TableCell>01</TableCell>
-                    <TableCell>38,25</TableCell>
-                  </TableRow>
-                  <TableRow
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell>Restaurante</TableCell>
-                    <TableCell>Alimentacao</TableCell>
-                    <TableCell>01</TableCell>
-                    <TableCell>38,25</TableCell>
-                  </TableRow>
-                  <TableRow
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell>Restaurante</TableCell>
-                    <TableCell>Alimentacao</TableCell>
-                    <TableCell>01</TableCell>
-                    <TableCell>38,25</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Box>
+          {allExpenses.length > 0 ? (
+            <>
+              <Grid item display='flex' alignItems='center' height='50px'>
+                <Typography>
+                  Total das Despesas:{" "}
+                  <strong style={{ color: "rgb(139 92 246)" }}>
+                    {totalExpenses.toLocaleString("pt-br", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </strong>
+                </Typography>
+              </Grid>
+              <Box
+                sx={{
+                  display: "flex",
+                  borderRadius: "10px",
+                  mt: "12px",
+                }}
+              >
+                <TableContainer component={Paper} sx={{ height: "450px" }}>
+                  <Table aria-label='simple table'>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Despesa</TableCell>
+                        <TableCell>Categoria</TableCell>
+                        <TableCell>Dia</TableCell>
+                        <TableCell>Valor (R$)</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {allExpenses.map((expense) => (
+                        <TableRow
+                          key={expense.id}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <TableCell>{expense.descricao}</TableCell>
+                          <TableCell>{expense.categoria}</TableCell>
+                          <TableCell>{expense.dia}</TableCell>
+                          <TableCell>
+                            {expense.valor.toLocaleString("pt-br", {
+                              style: "currency",
+                              currency: "BRL",
+                            })}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Box>
+            </>
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "space-evenly",
+                flex: "1",
+                mt: "12px",
+              }}
+            >
+              <Typography variant='h6'>
+                Não ha desepesas para o mês selecionado!
+              </Typography>
+              <img src={financesImage} width='60%' />
+            </Box>
+          )}
         </Grid>
       </Grid>
     </Grid>
