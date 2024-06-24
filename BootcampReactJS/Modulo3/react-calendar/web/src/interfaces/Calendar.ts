@@ -1,3 +1,5 @@
+export type EventWithCalendar = IEvent & { calendar: ICalendar };
+
 export interface ICalendar {
   id: number;
   name: string;
@@ -10,4 +12,14 @@ export interface IEvent {
   time?: string;
   desc: string;
   calendarId: number;
+}
+
+export interface ICalendarCell {
+  date: string;
+  dayOfMonth: number;
+  events: EventWithCalendar[];
+}
+
+export interface IParamsCalendar {
+  month: string;
 }
