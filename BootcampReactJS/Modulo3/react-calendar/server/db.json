@@ -68,12 +68,6 @@
         "name": "Trabalho",
         "color": "#7CB342"
       }
-    },
-    {
-      "id": 10,
-      "date": "2021-06-17",
-      "desc": "Teste 2",
-      "calendarId": 1
     }
   ]
 }

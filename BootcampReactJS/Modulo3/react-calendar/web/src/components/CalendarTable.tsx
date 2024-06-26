@@ -1,3 +1,5 @@
+import { MouseEvent } from "react";
+
 import { WatchLater } from "@mui/icons-material";
 import {
   Box,
@@ -10,7 +12,7 @@ import {
   TableRow,
   styled,
 } from "@mui/material";
-import { ICalendarCell } from "../interfaces/Calendar";
+import { ICalendarCell, IEvent } from "../interfaces/Calendar";
 import { DAYS_OF_WEEK } from "../utils/dateUtils";
 
 const StyledTable = styled(Table)<TableProps>(() => ({
@@ -26,9 +28,23 @@ const StyledTable = styled(Table)<TableProps>(() => ({
 
 interface ICalendarTableProps {
   weeks: ICalendarCell[][];
+  onClickDay: (dateSelected: string) => void;
+  onClickEvent: (event: IEvent) => void;
 }
 
-export const CalendarTable = ({ weeks }: ICalendarTableProps) => {
+export const CalendarTable = ({
+  weeks,
+  onClickDay,
+  onClickEvent,
+}: ICalendarTableProps) => {
+  function handleClick(event: MouseEvent, dateSelected: string) {
+    /* Verificação de verificar se é uma area vazia do elemento */
+    if (event.target === event.currentTarget) {
+      console.log("handleClick foi chamado!");
+      onClickDay(dateSelected);
+    }
+  }
+
   return (
     <>
       <TableContainer sx={{ flex: "1" }} component='div'>
@@ -52,7 +68,11 @@ export const CalendarTable = ({ weeks }: ICalendarTableProps) => {
             {weeks.map((week, index) => (
               <TableRow key={index}>
                 {week.map((cell) => (
-                  <TableCell key={cell.dayOfMonth} align='center'>
+                  <TableCell
+                    key={cell.dayOfMonth}
+                    align='center'
+                    onClick={(eventMouse) => handleClick(eventMouse, cell.date)}
+                  >
                     <Box
                       sx={{
                         fontWeight: "500",
@@ -69,6 +89,7 @@ export const CalendarTable = ({ weeks }: ICalendarTableProps) => {
                       return (
                         <>
                           <button
+                            key={indexEvent}
                             style={{
                               display: "flex",
                               alignItems: "center",
@@ -79,7 +100,8 @@ export const CalendarTable = ({ weeks }: ICalendarTableProps) => {
                               whiteSpace: "nowrap",
                               margin: "4px 0",
                             }}
-                            key={indexEvent}
+                            type='button'
+                            onClick={() => onClickEvent(eventItem)}
                           >
                             {eventItem.time && (
                               <>

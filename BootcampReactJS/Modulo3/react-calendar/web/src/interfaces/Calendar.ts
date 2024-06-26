@@ -6,12 +6,16 @@ export interface ICalendar {
   color: string;
 }
 
-export interface IEvent {
-  id: number;
+export interface IEditingEvent {
+  id?: number;
   date: string;
   time?: string;
   desc: string;
   calendarId: number;
+}
+
+export interface IEvent extends IEditingEvent {
+  id: number;
 }
 
 export interface ICalendarCell {

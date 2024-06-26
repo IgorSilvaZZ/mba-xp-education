@@ -5,15 +5,17 @@ import {
   EventWithCalendar,
   ICalendar,
   ICalendarCell,
+  IEditingEvent,
   IEvent,
   IParamsCalendar,
 } from "../interfaces/Calendar";
 
 import { getCalendars, getEvents } from "../utils/calendarUtils";
-import { DAYS_OF_WEEK } from "../utils/dateUtils";
+import { DAYS_OF_WEEK, getToday } from "../utils/dateUtils";
 import { CalendarsView } from "../components/CalendarsView";
 import { CalendarHeader } from "../components/CalendarHeader";
 import { CalendarTable } from "../components/CalendarTable";
+import { EventFormDialog } from "../components/EventFormDialog";
 
 function generateCalendar(
   date: string,
@@ -85,6 +87,8 @@ export default function Calendar() {
   const [calendars, setCalendars] = useState<ICalendar[]>([]);
   const [checksCalendars, setChecksCalendars] = useState<boolean[]>([]);
 
+  const [eventEditing, setEventEditing] = useState<IEditingEvent | null>(null);
+
   const weeks = generateCalendar(
     `${month}-01`,
     eventsDates,
@@ -101,6 +105,19 @@ export default function Calendar() {
     newCheckedCalendars[calendarIndex] = !newCheckedCalendars[calendarIndex];
 
     setChecksCalendars(newCheckedCalendars);
+  }
+
+  function openNewEventDate(date: string) {
+    setEventEditing({
+      date,
+      desc: "",
+      calendarId: calendars[0].id,
+    });
+  }
+
+  async function refreshEventsCalendar() {
+    const responseEvents = await getEvents(firstDate, lastDate);
+    setEventsDate(responseEvents);
   }
 
   useEffect(() => {
@@ -126,7 +143,11 @@ export default function Calendar() {
         >
           <h2>React-Calendar</h2>
 
-          <Button variant='contained' color='primary'>
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={() => openNewEventDate(getToday())}
+          >
             Novo Evento
           </Button>
 
@@ -139,7 +160,21 @@ export default function Calendar() {
         <Box display='flex' flexDirection='column' flex='1'>
           <CalendarHeader month={month} />
 
-          <CalendarTable weeks={weeks} />
+          <CalendarTable
+            weeks={weeks}
+            onClickDay={openNewEventDate}
+            onClickEvent={setEventEditing}
+          />
+
+          <EventFormDialog
+            eventEditing={eventEditing}
+            calendars={calendars}
+            onSave={async () => {
+              setEventEditing(null);
+              await refreshEventsCalendar();
+            }}
+            onCancel={() => setEventEditing(null)}
+          />
         </Box>
       </Box>
     </>
