@@ -1,19 +1,23 @@
 import { useHistory } from "react-router-dom";
 
-import {
-  ChevronLeftOutlined,
-  ChevronRightOutlined,
-  Person,
-} from "@mui/icons-material";
-import { Avatar, Box, IconButton } from "@mui/material";
+import { ChevronLeftOutlined, ChevronRightOutlined } from "@mui/icons-material";
+import { Box, IconButton } from "@mui/material";
 
 import { addMonths, formatMonth } from "../utils/dateUtils";
+import { UserMenu } from "./UserMenu";
+import { IUser } from "../interfaces/Calendar";
 
 interface ICalendarHeaderProps {
+  user: IUser;
+  onSignOut: () => void;
   month: string;
 }
 
-export const CalendarHeader = ({ month }: ICalendarHeaderProps) => {
+export const CalendarHeader = ({
+  month,
+  user,
+  onSignOut,
+}: ICalendarHeaderProps) => {
   const history = useHistory();
 
   return (
@@ -38,11 +42,7 @@ export const CalendarHeader = ({ month }: ICalendarHeaderProps) => {
           {formatMonth(month)}
         </Box>
 
-        <IconButton>
-          <Avatar>
-            <Person />
-          </Avatar>
-        </IconButton>
+        <UserMenu user={user} onSignOut={onSignOut} />
       </Box>
     </>
   );
