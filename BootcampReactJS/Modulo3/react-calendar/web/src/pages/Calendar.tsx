@@ -8,7 +8,6 @@ import {
   IEditingEvent,
   IEvent,
   IParamsCalendar,
-  IUser,
 } from "../interfaces/Calendar";
 
 import { getCalendars, getEvents } from "../utils/calendarUtils";
@@ -17,11 +16,6 @@ import { CalendarsView } from "../components/CalendarsView";
 import { CalendarHeader } from "../components/CalendarHeader";
 import { CalendarTable } from "../components/CalendarTable";
 import { EventFormDialog } from "../components/EventFormDialog";
-
-interface ICalendarProps {
-  user: IUser;
-  onSignOut: () => void;
-}
 
 function generateCalendar(
   date: string,
@@ -86,7 +80,7 @@ function generateCalendar(
   return weeks;
 }
 
-export default function Calendar({ user, onSignOut }: ICalendarProps) {
+export default function Calendar() {
   const { month } = useParams<IParamsCalendar>();
 
   const [eventsDates, setEventsDate] = useState<IEvent[]>([]);
@@ -164,7 +158,7 @@ export default function Calendar({ user, onSignOut }: ICalendarProps) {
           />
         </Box>
         <Box display='flex' flexDirection='column' flex='1'>
-          <CalendarHeader user={user} month={month} onSignOut={onSignOut} />
+          <CalendarHeader month={month} />
 
           <CalendarTable
             weeks={weeks}

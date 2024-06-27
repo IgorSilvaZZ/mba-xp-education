@@ -11,6 +11,8 @@ import { IUser } from "./interfaces/Calendar";
 
 import { getUser } from "./utils/calendarUtils";
 
+import { authContext } from "./contexts/authContext";
+
 const themeProvider = createTheme({
   palette: {
     mode: "light",
@@ -31,21 +33,23 @@ function App() {
   if (user) {
     return (
       <>
-        <BrowserRouter>
-          <Switch>
-            <ThemeProvider theme={themeProvider}>
-              <CssBaseline />
-              <Route path='/calendar/:month'>
-                <Calendar user={user} onSignOut={onSignOut} />
-              </Route>
-              <Redirect
-                to={{
-                  pathname: `/calendar/2021-05`,
-                }}
-              />
-            </ThemeProvider>
-          </Switch>
-        </BrowserRouter>
+        <authContext.Provider value={{ user, onSignOut }}>
+          <BrowserRouter>
+            <Switch>
+              <ThemeProvider theme={themeProvider}>
+                <CssBaseline />
+                <Route path='/calendar/:month'>
+                  <Calendar />
+                </Route>
+                <Redirect
+                  to={{
+                    pathname: `/calendar/2021-05`,
+                  }}
+                />
+              </ThemeProvider>
+            </Switch>
+          </BrowserRouter>
+        </authContext.Provider>
       </>
     );
   } else {

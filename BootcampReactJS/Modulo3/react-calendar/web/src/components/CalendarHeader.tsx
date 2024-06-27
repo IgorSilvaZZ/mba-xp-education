@@ -5,19 +5,12 @@ import { Box, IconButton } from "@mui/material";
 
 import { addMonths, formatMonth } from "../utils/dateUtils";
 import { UserMenu } from "./UserMenu";
-import { IUser } from "../interfaces/Calendar";
 
 interface ICalendarHeaderProps {
-  user: IUser;
-  onSignOut: () => void;
   month: string;
 }
 
-export const CalendarHeader = ({
-  month,
-  user,
-  onSignOut,
-}: ICalendarHeaderProps) => {
+export const CalendarHeader = ({ month }: ICalendarHeaderProps) => {
   const history = useHistory();
 
   return (
@@ -42,7 +35,7 @@ export const CalendarHeader = ({
           {formatMonth(month)}
         </Box>
 
-        <UserMenu user={user} onSignOut={onSignOut} />
+        <UserMenu />
       </Box>
     </>
   );

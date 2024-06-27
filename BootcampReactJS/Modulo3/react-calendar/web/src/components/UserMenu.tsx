@@ -1,16 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import { Person } from "@mui/icons-material";
 import { Avatar, Box, IconButton, Menu, MenuItem } from "@mui/material";
-import { IUser } from "../interfaces/Calendar";
 import { logout } from "../utils/calendarUtils";
 
-interface IUserMenuProps {
-  user: IUser;
-  onSignOut: () => void;
-}
+import { authContext } from "../contexts/authContext";
 
-export const UserMenu = ({ user, onSignOut }: IUserMenuProps) => {
+export const UserMenu = () => {
+  const { user, onSignOut } = useContext(authContext);
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   async function singOut() {
