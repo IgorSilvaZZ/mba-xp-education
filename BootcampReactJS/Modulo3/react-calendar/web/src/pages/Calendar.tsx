@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Button } from "@mui/material";
 import {
@@ -89,31 +89,39 @@ export default function Calendar() {
 
   const [eventEditing, setEventEditing] = useState<IEditingEvent | null>(null);
 
-  const weeks = generateCalendar(
-    `${month}-01`,
-    eventsDates,
-    calendars,
-    checksCalendars
-  );
+  const weeks = useMemo(() => {
+    return generateCalendar(
+      `${month}-01`,
+      eventsDates,
+      calendars,
+      checksCalendars
+    );
+  }, [month, eventsDates, calendars, checksCalendars]);
 
   const firstDate = weeks[0][0].date;
   const lastDate = weeks[weeks.length - 1][6].date;
 
-  function toggleCalendarChecked(calendarIndex: number) {
-    const newCheckedCalendars = [...checksCalendars];
+  const toggleCalendarChecked = useCallback(
+    (calendarIndex: number) => {
+      const newCheckedCalendars = [...checksCalendars];
 
-    newCheckedCalendars[calendarIndex] = !newCheckedCalendars[calendarIndex];
+      newCheckedCalendars[calendarIndex] = !newCheckedCalendars[calendarIndex];
 
-    setChecksCalendars(newCheckedCalendars);
-  }
+      setChecksCalendars(newCheckedCalendars);
+    },
+    [checksCalendars]
+  );
 
-  function openNewEventDate(date: string) {
-    setEventEditing({
-      date,
-      desc: "",
-      calendarId: calendars[0].id,
-    });
-  }
+  const openNewEventDate = useCallback(
+    (date: string) => {
+      setEventEditing({
+        date,
+        desc: "",
+        calendarId: calendars[0].id,
+      });
+    },
+    [calendars]
+  );
 
   async function refreshEventsCalendar() {
     const responseEvents = await getEvents(firstDate, lastDate);

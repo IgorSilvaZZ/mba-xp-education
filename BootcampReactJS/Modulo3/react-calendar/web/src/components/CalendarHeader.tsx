@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import { useHistory } from "react-router-dom";
 
 import { ChevronLeftOutlined, ChevronRightOutlined } from "@mui/icons-material";
@@ -10,7 +12,7 @@ interface ICalendarHeaderProps {
   month: string;
 }
 
-export const CalendarHeader = ({ month }: ICalendarHeaderProps) => {
+export const CalendarHeader = memo(({ month }: ICalendarHeaderProps) => {
   const history = useHistory();
 
   return (
@@ -39,4 +41,4 @@ export const CalendarHeader = ({ month }: ICalendarHeaderProps) => {
       </Box>
     </>
   );
-};
+});
