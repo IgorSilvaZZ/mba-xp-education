@@ -1,4 +1,4 @@
-import { MouseEvent, memo } from "react";
+import { Dispatch, MouseEvent, memo } from "react";
 
 import { WatchLater } from "@mui/icons-material";
 import {
@@ -12,8 +12,11 @@ import {
   TableRow,
   styled,
 } from "@mui/material";
-import { ICalendarCell, IEvent } from "../interfaces/Calendar";
+
+import { ICalendarCell } from "../interfaces/Calendar";
+
 import { DAYS_OF_WEEK } from "../utils/dateUtils";
+import { ICalenderAction } from "../reducers/calendarReducer";
 
 const StyledTable = styled(Table)<TableProps>(() => ({
   "& td ~ td, & th ~ th": {
@@ -28,17 +31,15 @@ const StyledTable = styled(Table)<TableProps>(() => ({
 
 interface ICalendarTableProps {
   weeks: ICalendarCell[][];
-  onClickDay: (dateSelected: string) => void;
-  onClickEvent: (event: IEvent) => void;
+  dispatch: Dispatch<ICalenderAction>;
 }
 
 export const CalendarTable = memo(
-  ({ weeks, onClickDay, onClickEvent }: ICalendarTableProps) => {
+  ({ weeks, dispatch }: ICalendarTableProps) => {
     function handleClick(event: MouseEvent, dateSelected: string) {
       /* Verificação de verificar se é uma area vazia do elemento */
       if (event.target === event.currentTarget) {
-        console.log("handleClick foi chamado!");
-        onClickDay(dateSelected);
+        dispatch({ type: "new", payload: dateSelected });
       }
     }
 
@@ -100,7 +101,9 @@ export const CalendarTable = memo(
                                 margin: "4px 0",
                               }}
                               type='button'
-                              onClick={() => onClickEvent(eventItem)}
+                              onClick={() =>
+                                dispatch({ type: "edit", payload: eventItem })
+                              }
                             >
                               {eventItem.time && (
                                 <>

@@ -32,3 +32,10 @@ export interface IUser {
   name: string;
   email: string;
 }
+
+export interface ICalendarState {
+  calendars: ICalendar[];
+  checksCalendars: boolean[];
+  eventsDates: IEvent[];
+  eventEditing: IEditingEvent | null;
+}

@@ -1,11 +1,11 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
+/* eslint-disable no-case-declarations */
+import { useEffect, useMemo, useCallback, useReducer } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Button } from "@mui/material";
 import {
   EventWithCalendar,
   ICalendar,
   ICalendarCell,
-  IEditingEvent,
   IEvent,
   IParamsCalendar,
 } from "../interfaces/Calendar";
@@ -16,6 +16,7 @@ import { CalendarsView } from "../components/CalendarsView";
 import { CalendarHeader } from "../components/CalendarHeader";
 import { CalendarTable } from "../components/CalendarTable";
 import { EventFormDialog } from "../components/EventFormDialog";
+import { calendarReducer } from "../reducers/calendarReducer";
 
 function generateCalendar(
   date: string,
@@ -83,11 +84,20 @@ function generateCalendar(
 export default function Calendar() {
   const { month } = useParams<IParamsCalendar>();
 
-  const [eventsDates, setEventsDate] = useState<IEvent[]>([]);
+  const [state, dispatch] = useReducer(calendarReducer, {
+    calendars: [],
+    checksCalendars: [],
+    eventsDates: [],
+    eventEditing: null,
+  });
+
+  const { eventsDates, calendars, checksCalendars, eventEditing } = state;
+
+  /* const [eventsDates, setEventsDate] = useState<IEvent[]>([]);
   const [calendars, setCalendars] = useState<ICalendar[]>([]);
   const [checksCalendars, setChecksCalendars] = useState<boolean[]>([]);
 
-  const [eventEditing, setEventEditing] = useState<IEditingEvent | null>(null);
+  const [eventEditing, setEventEditing] = useState<IEditingEvent | null>(null); */
 
   const weeks = useMemo(() => {
     return generateCalendar(
@@ -101,31 +111,9 @@ export default function Calendar() {
   const firstDate = weeks[0][0].date;
   const lastDate = weeks[weeks.length - 1][6].date;
 
-  const toggleCalendarChecked = useCallback(
-    (calendarIndex: number) => {
-      const newCheckedCalendars = [...checksCalendars];
-
-      newCheckedCalendars[calendarIndex] = !newCheckedCalendars[calendarIndex];
-
-      setChecksCalendars(newCheckedCalendars);
-    },
-    [checksCalendars]
-  );
-
-  const openNewEventDate = useCallback(
-    (date: string) => {
-      setEventEditing({
-        date,
-        desc: "",
-        calendarId: calendars[0].id,
-      });
-    },
-    [calendars]
-  );
-
   async function refreshEventsCalendar() {
     const responseEvents = await getEvents(firstDate, lastDate);
-    setEventsDate(responseEvents);
+    dispatch({ type: "load", payload: { eventsDates: responseEvents } });
   }
 
   useEffect(() => {
@@ -135,9 +123,10 @@ export default function Calendar() {
         getEvents(firstDate, lastDate),
       ]);
 
-      setCalendars(calendarsResponse);
-      setChecksCalendars(calendarsResponse.map(() => true));
-      setEventsDate(eventsResponse);
+      dispatch({
+        type: "load",
+        payload: { calendars: calendarsResponse, eventsDates: eventsResponse },
+      });
     })();
   }, [firstDate, lastDate]);
 
@@ -154,34 +143,30 @@ export default function Calendar() {
           <Button
             variant='contained'
             color='primary'
-            onClick={() => openNewEventDate(getToday())}
+            onClick={() => dispatch({ type: "new", payload: getToday() })}
           >
             Novo Evento
           </Button>
 
           <CalendarsView
+            dispatch={dispatch}
             calendars={calendars}
             checksCalendars={checksCalendars}
-            toggleCalendarChecked={toggleCalendarChecked}
           />
         </Box>
         <Box display='flex' flexDirection='column' flex='1'>
           <CalendarHeader month={month} />
 
-          <CalendarTable
-            weeks={weeks}
-            onClickDay={openNewEventDate}
-            onClickEvent={setEventEditing}
-          />
+          <CalendarTable weeks={weeks} dispatch={dispatch} />
 
           <EventFormDialog
             eventEditing={eventEditing}
             calendars={calendars}
             onSave={async () => {
-              setEventEditing(null);
+              dispatch({ type: "closeDialog", payload: null });
               await refreshEventsCalendar();
             }}
-            onCancel={() => setEventEditing(null)}
+            onCancel={() => dispatch({ type: "closeDialog", payload: null })}
           />
         </Box>
       </Box>
