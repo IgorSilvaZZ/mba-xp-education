@@ -1,47 +1,42 @@
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
+import { Table, TableBody, TableHead, TableRow } from "@mui/material";
 
-export const DetailsFinance = () => {
+import { CustomTableContainer } from "./CustomTableContainer";
+import { CustomCellTable } from "./CustomCellTable";
+
+import { IExpensesGroupByCategory } from "../interfaces/IExpenses";
+
+interface DetailsFinanceProps {
+  expensesGroupByCategory: IExpensesGroupByCategory[] | undefined;
+}
+
+export const DetailsFinance = ({
+  expensesGroupByCategory,
+}: DetailsFinanceProps) => {
   return (
     <>
-      <TableContainer
-        component={Paper}
-        sx={{ height: "300px", width: "100%", background: "transparent" }}
-      >
+      <CustomTableContainer>
         <Table aria-label='simple table'>
           <TableHead>
             <TableRow>
-              <TableCell>Categoria</TableCell>
-              <TableCell>Valor (R$)</TableCell>
+              <CustomCellTable>Categoria</CustomCellTable>
+              <CustomCellTable>Valor (R$)</CustomCellTable>
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow>
-              <TableCell>Alimentação</TableCell>
-              <TableCell>R$ 1936,10</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Alimentação</TableCell>
-              <TableCell>R$ 1936,10</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Alimentação</TableCell>
-              <TableCell>R$ 1936,10</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Alimentação</TableCell>
-              <TableCell>R$ 1936,10</TableCell>
-            </TableRow>
+            {expensesGroupByCategory!.map((expenseItem) => (
+              <TableRow>
+                <CustomCellTable>{expenseItem.categoria}</CustomCellTable>
+                <CustomCellTable>
+                  {expenseItem.total.toLocaleString("pt-br", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </CustomCellTable>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </CustomTableContainer>
     </>
   );
 };

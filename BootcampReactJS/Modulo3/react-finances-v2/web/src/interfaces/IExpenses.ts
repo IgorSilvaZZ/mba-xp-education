@@ -6,3 +6,8 @@ export interface IExpenses {
   mes: string;
   dia: string;
 }
+
+export interface IExpensesGroupByCategory {
+  categoria: string;
+  total: number;
+}

@@ -1,4 +1,5 @@
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
 import { ToastContainer } from "react-toastify";
 
@@ -15,6 +16,7 @@ const darkTheme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
       <ToastContainer />
       <Routes />
     </ThemeProvider>

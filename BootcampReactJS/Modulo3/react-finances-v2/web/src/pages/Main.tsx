@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
+import { AxiosError } from "axios";
 
 import { Box, Button, Grid, MenuItem, Typography } from "@mui/material";
 
@@ -10,12 +11,14 @@ import { SelectInput } from "../components/SelectInput";
 
 import { monthsSelected, yearsSelected } from "../utils/getMonthsYears";
 
-import { api } from "../lib/axios";
-
-import { IExpenses } from "../interfaces/IExpenses";
+import { IExpenses, IExpensesGroupByCategory } from "../interfaces/IExpenses";
 
 import { NotFoundExpenses } from "../components/NotFoundExpenses";
 import { TabsFinances } from "../components/TabsFinance";
+
+import { useAuth } from "../hooks/useAuth";
+
+import { api } from "../lib/axios";
 
 interface ParamsHistory {
   year?: string;
@@ -27,11 +30,16 @@ export default function Main() {
 
   const history = useHistory();
 
+  const { logout } = useAuth();
+
   const [yearSelected, setYearSelected] = useState<string>(year ?? "2020");
   const [monthSelected, setMonthSelected] = useState<string>(month ?? "01");
   const [totalExpenses, setTotalExpenses] = useState<number>(0);
 
-  const [allExpenses, setAllExpenses] = useState<IExpenses[]>([]);
+  const [allExpenses, setAllExpenses] = useState<IExpenses[] | undefined>([]);
+  const [expensesGroupByCategory, setExpensesGroupByCategory] = useState<
+    IExpensesGroupByCategory[] | undefined
+  >([]);
 
   async function handleSubmit() {
     history.push(`/despesas/${yearSelected}-${monthSelected}`);
@@ -57,24 +65,57 @@ export default function Main() {
   }
 
   async function getExpenses(yearFilter: string, monthFilter: string) {
-    const { data } = await api.get<IExpenses[]>(`/despesas`, {
-      params: {
-        mes: `${yearFilter}-${monthFilter}`,
-      },
-    });
+    try {
+      const { data } = await api.get<IExpenses[]>(`/despesas`, {
+        params: {
+          mes: `${yearFilter}-${monthFilter}`,
+        },
+      });
 
-    const expensesTotal = data.reduce(
-      (acc, expenseItem) => acc + expenseItem.valor,
-      0
-    );
+      const expensesTotal = data.reduce(
+        (acc, expenseItem) => acc + expenseItem.valor,
+        0
+      );
 
-    const sortableDayExpenses = data.sort(
-      (a, b) => Number(a.dia) - Number(b.dia)
-    );
+      const sortableDayExpenses = data.sort(
+        (a, b) => Number(a.dia) - Number(b.dia)
+      );
 
-    setTotalExpenses(expensesTotal);
+      const groupByCategory: IExpensesGroupByCategory[] = [];
 
-    return sortableDayExpenses;
+      sortableDayExpenses.map((expenseItem) => {
+        const alreadyExpenseGroup = groupByCategory.find(
+          (item) => item.categoria === expenseItem.categoria
+        );
+
+        if (alreadyExpenseGroup) {
+          alreadyExpenseGroup.total += expenseItem.valor;
+        } else {
+          groupByCategory.push({
+            categoria: expenseItem.categoria,
+            total: expenseItem.valor,
+          });
+        }
+      });
+
+      setExpensesGroupByCategory(groupByCategory);
+
+      setTotalExpenses(expensesTotal);
+
+      return sortableDayExpenses;
+    } catch (error) {
+      console.log(error);
+
+      if (error instanceof AxiosError) {
+        if (
+          error.response &&
+          error.response.status &&
+          error.response.status === 401
+        ) {
+          logout();
+        }
+      }
+    }
   }
 
   useEffect(() => {
@@ -153,7 +194,7 @@ export default function Main() {
             </Button>
           </Grid>
 
-          {allExpenses.length > 0 ? (
+          {allExpenses && allExpenses.length > 0 ? (
             <>
               <Grid item display='flex' alignItems='center' height='50px'>
                 <Typography>
@@ -173,7 +214,10 @@ export default function Main() {
                   mt: "12px",
                 }}
               >
-                <TabsFinances allExpenses={allExpenses} />
+                <TabsFinances
+                  allExpenses={allExpenses}
+                  expensesGroupByCategory={expensesGroupByCategory}
+                />
               </Box>
             </>
           ) : (

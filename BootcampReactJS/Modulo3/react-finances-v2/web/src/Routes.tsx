@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Main from "./pages/Main";
@@ -13,7 +13,7 @@ export default function Routes() {
           <AuthContextProvider>
             <Route path='/login' component={Login} />
             <Route path='/despesas/:year-:month' component={Main} />
-            <Route path='/despesas' component={Main} />
+            <Redirect to='/despesas/2020-01' />
           </AuthContextProvider>
         </Switch>
       </BrowserRouter>

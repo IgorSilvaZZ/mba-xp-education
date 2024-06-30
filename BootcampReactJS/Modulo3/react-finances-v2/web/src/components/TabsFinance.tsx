@@ -4,16 +4,20 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { FinancesTable } from "./FinancesTable";
 import { DetailsFinance } from "./DetailsFinance";
 
-import { IExpenses } from "../interfaces/IExpenses";
+import { IExpenses, IExpensesGroupByCategory } from "../interfaces/IExpenses";
 
 import "react-tabs/style/react-tabs.css";
 import { Box } from "@mui/material";
 
 interface TabsFinancesProps {
   allExpenses: IExpenses[];
+  expensesGroupByCategory: IExpensesGroupByCategory[] | undefined;
 }
 
-export const TabsFinances = ({ allExpenses }: TabsFinancesProps) => {
+export const TabsFinances = ({
+  allExpenses,
+  expensesGroupByCategory,
+}: TabsFinancesProps) => {
   const [selectedTab, setSelectedTab] = useState<number>(0);
 
   function handleTabSelected(tabIndex: number) {
@@ -29,7 +33,7 @@ export const TabsFinances = ({ allExpenses }: TabsFinancesProps) => {
         </TabList>
 
         <TabPanel>
-          <DetailsFinance />
+          <DetailsFinance expensesGroupByCategory={expensesGroupByCategory} />
         </TabPanel>
 
         <TabPanel>

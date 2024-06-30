@@ -1,13 +1,9 @@
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
+import { Table, TableBody, TableHead, TableRow } from "@mui/material";
+
 import { IExpenses } from "../interfaces/IExpenses";
+
+import { CustomCellTable } from "./CustomCellTable";
+import { CustomTableContainer } from "./CustomTableContainer";
 
 interface FinancesTableProps {
   allExpenses: IExpenses[];
@@ -16,17 +12,14 @@ interface FinancesTableProps {
 export const FinancesTable = ({ allExpenses }: FinancesTableProps) => {
   return (
     <>
-      <TableContainer
-        component={Paper}
-        sx={{ height: "300px", width: "100%", background: "transparent" }}
-      >
+      <CustomTableContainer>
         <Table aria-label='simple table'>
           <TableHead>
             <TableRow>
-              <TableCell>Despesa</TableCell>
-              <TableCell>Categoria</TableCell>
-              <TableCell>Dia</TableCell>
-              <TableCell>Valor (R$)</TableCell>
+              <CustomCellTable>Despesa</CustomCellTable>
+              <CustomCellTable>Categoria</CustomCellTable>
+              <CustomCellTable>Dia</CustomCellTable>
+              <CustomCellTable>Valor (R$)</CustomCellTable>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -37,20 +30,20 @@ export const FinancesTable = ({ allExpenses }: FinancesTableProps) => {
                   "&:last-child td, &:last-child th": { border: 0 },
                 }}
               >
-                <TableCell>{expense.descricao}</TableCell>
-                <TableCell>{expense.categoria}</TableCell>
-                <TableCell>{expense.dia}</TableCell>
-                <TableCell>
+                <CustomCellTable>{expense.descricao}</CustomCellTable>
+                <CustomCellTable>{expense.categoria}</CustomCellTable>
+                <CustomCellTable>{expense.dia}</CustomCellTable>
+                <CustomCellTable>
                   {expense.valor.toLocaleString("pt-br", {
                     style: "currency",
                     currency: "BRL",
                   })}
-                </TableCell>
+                </CustomCellTable>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </CustomTableContainer>
     </>
   );
 };
