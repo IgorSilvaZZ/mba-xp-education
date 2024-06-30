@@ -1,9 +1,14 @@
 import { Avatar, Box, Grid } from "@mui/material";
 
+import { HomeOutlined, LogoutRounded } from "@mui/icons-material";
+
 import { ItemMenu } from "./ItemMenu";
-import { HomeOutlined, InfoOutlined } from "@mui/icons-material";
+
+import { useAuth } from "../hooks/useAuth";
 
 export const NavBar = () => {
+  const { user, logout } = useAuth();
+
   return (
     <>
       <Grid
@@ -33,7 +38,9 @@ export const NavBar = () => {
           >
             <ItemMenu icon={<HomeOutlined />}>DashBoard</ItemMenu>
 
-            <ItemMenu icon={<InfoOutlined />}>Sobre Nós</ItemMenu>
+            <ItemMenu icon={<LogoutRounded />} onClick={logout}>
+              Sair
+            </ItemMenu>
           </Box>
 
           <Box
@@ -44,8 +51,12 @@ export const NavBar = () => {
             color='white'
             alignItems='center'
           >
-            <Avatar>IG</Avatar>
-            <span>Igor Silva</span>
+            {user && (
+              <>
+                <Avatar>{user.nome?.toUpperCase()?.substring(0, 2)}</Avatar>
+                <span>{user.nome}</span>
+              </>
+            )}
           </Box>
         </Box>
       </Grid>

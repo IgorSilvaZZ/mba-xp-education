@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { AxiosError } from "axios";
 
 import { Box, Button, Grid, MenuItem, Typography } from "@mui/material";
 
@@ -11,14 +9,10 @@ import { SelectInput } from "../components/SelectInput";
 
 import { monthsSelected, yearsSelected } from "../utils/getMonthsYears";
 
-import { IExpenses, IExpensesGroupByCategory } from "../interfaces/IExpenses";
-
 import { NotFoundExpenses } from "../components/NotFoundExpenses";
 import { TabsFinances } from "../components/TabsFinance";
-
+import { userExpenses } from "../hooks/useExpenses";
 import { useAuth } from "../hooks/useAuth";
-
-import { api } from "../lib/axios";
 
 interface ParamsHistory {
   year?: string;
@@ -30,16 +24,19 @@ export default function Main() {
 
   const history = useHistory();
 
-  const { logout } = useAuth();
+  const {
+    monthSelected,
+    yearSelected,
+    allExpenses,
+    totalExpenses,
+    expensesGroupByCategory,
+    getExpenses,
+    setMonthSelected,
+    setYearSelected,
+    setAllExpenses,
+  } = userExpenses(year, month);
 
-  const [yearSelected, setYearSelected] = useState<string>(year ?? "2020");
-  const [monthSelected, setMonthSelected] = useState<string>(month ?? "01");
-  const [totalExpenses, setTotalExpenses] = useState<number>(0);
-
-  const [allExpenses, setAllExpenses] = useState<IExpenses[] | undefined>([]);
-  const [expensesGroupByCategory, setExpensesGroupByCategory] = useState<
-    IExpensesGroupByCategory[] | undefined
-  >([]);
+  const { user } = useAuth();
 
   async function handleSubmit() {
     history.push(`/despesas/${yearSelected}-${monthSelected}`);
@@ -64,71 +61,6 @@ export default function Main() {
     setMonthSelected(newMonth);
   }
 
-  async function getExpenses(yearFilter: string, monthFilter: string) {
-    try {
-      const { data } = await api.get<IExpenses[]>(`/despesas`, {
-        params: {
-          mes: `${yearFilter}-${monthFilter}`,
-        },
-      });
-
-      const expensesTotal = data.reduce(
-        (acc, expenseItem) => acc + expenseItem.valor,
-        0
-      );
-
-      const sortableDayExpenses = data.sort(
-        (a, b) => Number(a.dia) - Number(b.dia)
-      );
-
-      const groupByCategory: IExpensesGroupByCategory[] = [];
-
-      sortableDayExpenses.map((expenseItem) => {
-        const alreadyExpenseGroup = groupByCategory.find(
-          (item) => item.categoria === expenseItem.categoria
-        );
-
-        if (alreadyExpenseGroup) {
-          alreadyExpenseGroup.total += expenseItem.valor;
-        } else {
-          groupByCategory.push({
-            categoria: expenseItem.categoria,
-            total: expenseItem.valor,
-          });
-        }
-      });
-
-      setExpensesGroupByCategory(groupByCategory);
-
-      setTotalExpenses(expensesTotal);
-
-      return sortableDayExpenses;
-    } catch (error) {
-      console.log(error);
-
-      if (error instanceof AxiosError) {
-        if (
-          error.response &&
-          error.response.status &&
-          error.response.status === 401
-        ) {
-          logout();
-        }
-      }
-    }
-  }
-
-  useEffect(() => {
-    (async () => {
-      const expensesYearMonth = await getExpenses(
-        year ?? yearSelected,
-        month ?? monthSelected
-      );
-
-      setAllExpenses(expensesYearMonth);
-    })();
-  }, []);
-
   return (
     <Grid container sx={{ height: "100vh", width: "100vw" }}>
       <NavBar />
@@ -148,7 +80,7 @@ export default function Main() {
           color='white'
           gap={2}
         >
-          <Typography variant='h5'>Hey Igor 👋</Typography>
+          <Typography variant='h5'>Hey {user.nome} 👋</Typography>
           <Typography variant='subtitle2'>
             Selecione o ano e mês para verificar suas despesas 💸
           </Typography>

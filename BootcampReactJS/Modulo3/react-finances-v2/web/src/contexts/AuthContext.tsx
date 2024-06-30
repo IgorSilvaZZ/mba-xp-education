@@ -41,7 +41,7 @@ export const AuthContextProvider = ({ children }: IAuthProviderProps) => {
 
       console.log(userResponse);
 
-      history.push("/despesas");
+      history.push("/despesas/2020-01");
     } catch (error) {
       console.log(error);
 
