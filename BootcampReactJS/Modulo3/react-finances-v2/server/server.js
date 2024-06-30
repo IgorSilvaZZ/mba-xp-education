@@ -4,6 +4,7 @@ const fs = require("fs");
 const bodyParser = require("body-parser");
 const jsonServer = require("json-server");
 const session = require("express-session");
+const cors = require("cors");
 
 const server = jsonServer.create();
 
@@ -14,12 +15,19 @@ server.use(jsonServer.defaults());
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json());
 
-const SECRET_KEY = "aFuhVas87asd62kjsDf";
+const SECRET_KEY = "123456789";
 server.use(
   session({
     secret: SECRET_KEY,
     resave: false,
     saveUninitialized: false /*, cookie: {maxAge: 5000}*/,
+  })
+);
+
+server.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
   })
 );
 

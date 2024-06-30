@@ -1,13 +1,13 @@
 import { useState } from "react";
-
-import { Box } from "@mui/material";
-
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
 import { FinancesTable } from "./FinancesTable";
 import { DetailsFinance } from "./DetailsFinance";
 
 import { IExpenses } from "../interfaces/IExpenses";
+
+import "react-tabs/style/react-tabs.css";
+import { Box } from "@mui/material";
 
 interface TabsFinancesProps {
   allExpenses: IExpenses[];
@@ -21,24 +21,21 @@ export const TabsFinances = ({ allExpenses }: TabsFinancesProps) => {
   }
 
   return (
-    <>
-      <Box>
-        <Tabs selectedIndex={selectedTab} onSelect={handleTabSelected}>
-          <TabList>
-            <Tab>Resumo</Tab>
-            <Tab>Detalhes</Tab>
-          </TabList>
+    <Box sx={{ width: "100%" }}>
+      <Tabs selectedIndex={selectedTab} onSelect={handleTabSelected}>
+        <TabList>
+          <Tab>Resumo</Tab>
+          <Tab>Detalhes</Tab>
+        </TabList>
 
-          <TabPanel>
-            <FinancesTable allExpenses={allExpenses} />
-          </TabPanel>
+        <TabPanel>
+          <DetailsFinance />
+        </TabPanel>
 
-          <TabPanel>
-            <DetailsFinance />
-          </TabPanel>
-        </Tabs>
-      </Box>
-      <TabPanel></TabPanel>
-    </>
+        <TabPanel>
+          <FinancesTable allExpenses={allExpenses} />
+        </TabPanel>
+      </Tabs>
+    </Box>
   );
 };

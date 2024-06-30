@@ -45,10 +45,14 @@ export default function Main() {
   }
 
   function handleChangeYear(newYear: string) {
+    history.push(`/despesas/${newYear}-${monthSelected}`);
+
     setYearSelected(newYear);
   }
 
   function handleChangeMonth(newMonth: string) {
+    history.push(`/despesas/${yearSelected}-${newMonth}`);
+
     setMonthSelected(newMonth);
   }
 

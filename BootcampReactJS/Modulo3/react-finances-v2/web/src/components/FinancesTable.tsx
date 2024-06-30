@@ -16,7 +16,10 @@ interface FinancesTableProps {
 export const FinancesTable = ({ allExpenses }: FinancesTableProps) => {
   return (
     <>
-      <TableContainer component={Paper} sx={{ height: "450px" }}>
+      <TableContainer
+        component={Paper}
+        sx={{ height: "300px", width: "100%", background: "transparent" }}
+      >
         <Table aria-label='simple table'>
           <TableHead>
             <TableRow>

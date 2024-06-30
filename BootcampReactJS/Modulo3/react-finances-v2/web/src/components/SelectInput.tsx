@@ -27,9 +27,7 @@ export const SelectInput = ({
   return (
     <>
       <FormControl sx={{ width: "40%" }}>
-        <InputLabel shrink sx={{ color: "white" }}>
-          {label}
-        </InputLabel>
+        <InputLabel shrink>{label}</InputLabel>
         <Select
           size='small'
           label={label}
@@ -39,6 +37,7 @@ export const SelectInput = ({
             border: "1px solid gray",
             outline: "none",
             borderRadius: "15px",
+            color: "white",
           }}
         >
           {items}

@@ -11,6 +11,12 @@
       "nome": "Usuário 2",
       "email": "usuario2@email.com",
       "senha": "react"
+    },
+    {
+      "id": 3,
+      "nome": "Igor Silva",
+      "email": "igor@email.com",
+      "senha": "1234"
     }
   ]
 }

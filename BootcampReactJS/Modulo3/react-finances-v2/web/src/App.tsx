@@ -1,6 +1,10 @@
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
-import Main from "./pages/Main";
+import { ToastContainer } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
+
+import Routes from "./Routes";
 
 const darkTheme = createTheme({
   palette: {
@@ -10,11 +14,10 @@ const darkTheme = createTheme({
 
 function App() {
   return (
-    <>
-      <ThemeProvider theme={darkTheme}>
-        <Main />
-      </ThemeProvider>
-    </>
+    <ThemeProvider theme={darkTheme}>
+      <ToastContainer />
+      <Routes />
+    </ThemeProvider>
   );
 }
 

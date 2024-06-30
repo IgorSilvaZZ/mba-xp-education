@@ -7,3 +7,33 @@ body {
   overflow: hidden;
   background-color: #0c0c0e;
 }
+
+.react-tabs__tab-list {
+  border-bottom: 1px solid #333;
+}
+
+.react-tabs__tab {
+  border: 1px solid transparent;
+  color: #ddd;
+  background-color: #0c0c0e;
+  margin-bottom: -1px;
+}
+
+.react-tabs__tab--selected {
+  border-color: #222;
+  border-bottom-color: #222;
+  color: #fff;
+  background-color: #0c0c0e;
+}
+
+.react-tabs__tab--disabled {
+  color: #555;
+  background-color: #222;
+}
+
+/* .react-tabs__tab-panel {
+  border: 1px solid #333;
+  padding: 16px;
+  background-color: #222;
+  color: #fff;
+} */
