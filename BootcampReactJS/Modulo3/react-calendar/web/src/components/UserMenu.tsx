@@ -1,13 +1,13 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 import { Person } from "@mui/icons-material";
 import { Avatar, Box, IconButton, Menu, MenuItem } from "@mui/material";
 import { logout } from "../utils/calendarUtils";
 
-import { authContext } from "../contexts/authContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 export const UserMenu = () => {
-  const { user, onSignOut } = useContext(authContext);
+  const { user, onSignOut } = useAuthContext();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 

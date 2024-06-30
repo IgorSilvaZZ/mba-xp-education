@@ -1,9 +1,12 @@
 import {
+  EventWithCalendar,
   ICalendar,
+  ICalendarCell,
   IEditingEvent,
   IEvent,
   IUser,
 } from "../interfaces/Calendar";
+import { DAYS_OF_WEEK } from "./dateUtils";
 
 async function handleResponse(resp: Response) {
   if (resp.ok) {
@@ -114,4 +117,67 @@ export async function deleteEventCalendar(
     credentials: "include",
     method: "DELETE",
   });
+}
+
+export function generateCalendar(
+  date: string,
+  allEvents: IEvent[],
+  calendars: ICalendar[],
+  checksCalendars: boolean[]
+): ICalendarCell[][] {
+  const weeks: ICalendarCell[][] = [];
+
+  const dateToObject = new Date(date + "T12:00:00");
+  const currentMonth = dateToObject.getMonth();
+
+  const currentDay = new Date(dateToObject.valueOf());
+
+  currentDay.setDate(1);
+
+  const dayOfWeek = currentDay.getDay();
+
+  currentDay.setDate(1 - dayOfWeek);
+
+  do {
+    const week: ICalendarCell[] = [];
+
+    for (let i = 0; i < DAYS_OF_WEEK.length; i++) {
+      const year = currentDay.getFullYear();
+
+      const month = String(currentDay.getMonth() + 1).padStart(2, "0");
+
+      const day = String(currentDay.getDate()).padStart(2, "0");
+
+      const isoDate = `${year}-${month}-${day}`;
+
+      const events: EventWithCalendar[] = [];
+
+      for (const eventItem of allEvents) {
+        if (eventItem.date === isoDate) {
+          const calendarIndex = calendars.findIndex(
+            (calendarItem) => calendarItem.id === eventItem.calendarId
+          );
+
+          if (checksCalendars[calendarIndex]) {
+            events.push({
+              ...eventItem,
+              calendar: calendars[calendarIndex],
+            });
+          }
+        }
+      }
+
+      week.push({
+        events,
+        date: isoDate,
+        dayOfMonth: currentDay.getDate(),
+      });
+
+      currentDay.setDate(currentDay.getDate() + 1);
+    }
+
+    weeks.push(week);
+  } while (currentDay.getMonth() === currentMonth);
+
+  return weeks;
 }
