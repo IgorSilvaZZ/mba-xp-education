@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AxiosError } from "axios";
 
 import { IExpenses, IExpensesGroupByCategory } from "../interfaces/IExpenses";
@@ -14,27 +14,27 @@ export const userExpenses = (
 ) => {
   const { logout } = useAuth();
 
-  const [yearSelected, setYearSelected] = useState<string>(year ?? "2020");
-  const [monthSelected, setMonthSelected] = useState<string>(month ?? "01");
-  const [totalExpenses, setTotalExpenses] = useState<number>(0);
-
   const [allExpenses, setAllExpenses] = useState<IExpenses[] | undefined>([]);
   const [expensesGroupByCategory, setExpensesGroupByCategory] = useState<
     IExpensesGroupByCategory[] | undefined
   >([]);
 
-  async function getExpenses(yearFilter: string, monthFilter: string) {
+  const totalExpenses = useMemo(() => {
+    const total = allExpenses!.reduce(
+      (acc, expenseItem) => acc + expenseItem.valor,
+      0
+    );
+
+    return total;
+  }, [allExpenses]);
+
+  const getExpenses = useCallback(async () => {
     try {
       const { data } = await api.get<IExpenses[]>(`/despesas`, {
         params: {
-          mes: `${yearFilter}-${monthFilter}`,
+          mes: `${year}-${month}`,
         },
       });
-
-      const expensesTotal = data.reduce(
-        (acc, expenseItem) => acc + expenseItem.valor,
-        0
-      );
 
       const sortableDayExpenses = data.sort(
         (a, b) => Number(a.dia) - Number(b.dia)
@@ -61,8 +61,6 @@ export const userExpenses = (
         groupByCategory.sort((a, b) => b.total - a.total)
       );
 
-      setTotalExpenses(expensesTotal);
-
       return sortableDayExpenses;
     } catch (error) {
       console.log(error);
@@ -77,28 +75,19 @@ export const userExpenses = (
         }
       }
     }
-  }
+  }, [year, month, logout]);
 
   useEffect(() => {
     (async () => {
-      const expensesYearMonth = await getExpenses(
-        year ?? yearSelected,
-        month ?? monthSelected
-      );
+      const expensesYearMonth = await getExpenses();
 
       setAllExpenses(expensesYearMonth);
     })();
-  }, []);
+  }, [year, month, getExpenses]);
 
   return {
-    yearSelected,
-    monthSelected,
     totalExpenses,
     allExpenses,
     expensesGroupByCategory,
-    setAllExpenses,
-    setYearSelected,
-    setMonthSelected,
-    getExpenses,
   };
 };

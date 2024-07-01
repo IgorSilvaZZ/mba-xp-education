@@ -39,9 +39,9 @@ export const AuthContextProvider = ({ children }: IAuthProviderProps) => {
 
       localStorage.setItem("user", JSON.stringify(userResponse));
 
-      console.log(userResponse);
-
       history.push("/despesas/2020-01");
+
+      setUser(userResponse);
     } catch (error) {
       console.log(error);
 

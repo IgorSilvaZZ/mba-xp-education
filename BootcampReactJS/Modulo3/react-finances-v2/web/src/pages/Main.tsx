@@ -2,7 +2,7 @@
 
 import { useParams, useHistory } from "react-router-dom";
 
-import { Box, Button, Grid, MenuItem, Typography } from "@mui/material";
+import { Box, Grid, MenuItem, Typography } from "@mui/material";
 
 import { NavBar } from "../components/NavBar";
 import { SelectInput } from "../components/SelectInput";
@@ -24,41 +24,19 @@ export default function Main() {
 
   const history = useHistory();
 
-  const {
-    monthSelected,
-    yearSelected,
-    allExpenses,
-    totalExpenses,
-    expensesGroupByCategory,
-    getExpenses,
-    setMonthSelected,
-    setYearSelected,
-    setAllExpenses,
-  } = userExpenses(year, month);
+  const { allExpenses, totalExpenses, expensesGroupByCategory } = userExpenses(
+    year,
+    month
+  );
 
   const { user } = useAuth();
 
-  async function handleSubmit() {
-    history.push(`/despesas/${yearSelected}-${monthSelected}`);
-
-    const expenses = await getExpenses(
-      year ?? yearSelected,
-      month ?? monthSelected
-    );
-
-    setAllExpenses(expenses);
-  }
-
   function handleChangeYear(newYear: string) {
-    history.push(`/despesas/${newYear}-${monthSelected}`);
-
-    setYearSelected(newYear);
+    history.push(`/despesas/${newYear}-${month}`);
   }
 
   function handleChangeMonth(newMonth: string) {
-    history.push(`/despesas/${yearSelected}-${newMonth}`);
-
-    setMonthSelected(newMonth);
+    history.push(`/despesas/${year}-${newMonth}`);
   }
 
   return (
@@ -95,7 +73,7 @@ export default function Main() {
           >
             <SelectInput
               label='Ano'
-              selectValue={yearSelected}
+              selectValue={year ?? "2020"}
               onSelectChange={handleChangeYear}
             >
               {yearsSelected.map((year, index) => (
@@ -107,7 +85,7 @@ export default function Main() {
 
             <SelectInput
               label='Mês'
-              selectValue={monthSelected}
+              selectValue={month ?? "01"}
               onSelectChange={handleChangeMonth}
             >
               {monthsSelected.map((month, index) => (
@@ -116,14 +94,6 @@ export default function Main() {
                 </MenuItem>
               ))}
             </SelectInput>
-
-            <Button
-              variant='contained'
-              sx={{ backgroundColor: "rgb(124 58 237)", borderRadius: "15px" }}
-              onClick={handleSubmit}
-            >
-              Pesquisar
-            </Button>
           </Grid>
 
           {allExpenses && allExpenses.length > 0 ? (
