@@ -10,10 +10,19 @@ import { useProductContext } from "../hooks/useProductContext";
 import productImage from "../images/shop-image.png";
 import detailsImage from "../images/details-image.png";
 
-export const Main = () => {
+import { fakeStoreApi } from "../lib/axio";
+import { Product } from "../interfaces/Product";
+
+interface MainProps {
+  products: Product[];
+}
+
+export const Main = ({ products }: MainProps) => {
   const { currentView } = useProductContext();
 
   const imageView = currentView === "list" ? productImage : detailsImage;
+
+  console.log(products);
 
   return (
     <>
