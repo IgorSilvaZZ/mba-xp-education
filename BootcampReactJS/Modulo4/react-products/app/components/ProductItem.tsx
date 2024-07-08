@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 
-import { useProductContext } from "../hooks/useProductContext";
+"use client";
+
+import Link from "next/link";
 
 import { Product } from "../interfaces/Product";
 
@@ -9,19 +11,9 @@ interface ProductItemProps {
 }
 
 export const ProductItem = ({ product }: ProductItemProps) => {
-  const { handleCurrentView, handleSelectIdProduct } = useProductContext();
-
-  function handleClickProductItem() {
-    handleCurrentView("details");
-    handleSelectIdProduct(product.id);
-  }
-
   return (
     <>
-      <div
-        className='flex items-center gap-5 w-4/5 h-32 rounded-lg border-2 border-gray-300 cursor-pointer'
-        onClick={handleClickProductItem}
-      >
+      <div className='flex items-center gap-5 w-4/5 h-32 rounded-lg border-2 border-gray-300'>
         <div className='flex items-center justify-center w-28 h-full p-2'>
           <img
             src={product.image}
@@ -41,7 +33,13 @@ export const ProductItem = ({ product }: ProductItemProps) => {
             <b>Categoria:</b> {product.category}
           </span>
         </div>
-        <div className='w-16 text-center text-2xl text-gray-400'>{"->"}</div>
+        <div className='w-16 text-center text-2xl text-gray-400'>
+          <span className='cursor-pointer'>
+            <Link href='/products/[product]' as={`products/${product.id}`}>
+              {"->"}
+            </Link>
+          </span>
+        </div>
       </div>
     </>
   );
