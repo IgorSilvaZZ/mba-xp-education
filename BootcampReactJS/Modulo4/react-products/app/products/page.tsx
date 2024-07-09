@@ -10,7 +10,9 @@ import productImage from "../images/shop-image.png";
 import { ProductItem } from "../components/ProductItem";
 
 export default async function Products() {
-  const response = await fetch("https://fakestoreapi.com/products");
+  const response = await fetch("https://fakestoreapi.com/products", {
+    next: { revalidate: 3600 },
+  });
 
   const products = (await response.json()) as Product[];
 
