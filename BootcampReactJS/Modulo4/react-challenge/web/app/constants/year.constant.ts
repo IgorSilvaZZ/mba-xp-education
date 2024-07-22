@@ -1,15 +1,9 @@
-export const years = [
-  "2003",
-  "2004",
-  "2005",
-  "2006",
-  "2007",
-  "2008",
-  "2009",
-  "2010",
-  "2011",
-  "2012",
-  "2013",
-  "2014",
-  "2015",
-];
+const START_YEAR = 2003;
+const END_YEAR = 2015;
+
+export const years = Array.from(
+  { length: END_YEAR - START_YEAR + 1 },
+  (value, index) => {
+    return String(START_YEAR + Number(index));
+  }
+);
